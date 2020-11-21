@@ -77,10 +77,17 @@ func cargarDatos() {
 }
 
 func borrarDatos(){
-	_, err = db.Exec(`DELETE FROM tarjeta;
+	_, err = db.Exec(`
+					  DELETE FROM compra;
+					  DELETE FROM tarjeta;
 					  DELETE FROM cliente;
+					  DELETE FROM rechazo;
 					  DELETE FROM comercio;
-					  DELETE FROM cierre;`)
+					  DELETE FROM cierre;
+					  DELETE FROM cabecera;
+					  DELETE FROM detalle;
+					  DELETE FROM alerta;
+					  DELETE FROM consumo;`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,7 +95,7 @@ func borrarDatos(){
 
 func InsertarCierres() {
 	insertarCierres()
-	_, err = db.Query(`SELECT insertCierres();`)
+	_, err = db.Query(`SELECT insertcierres();`)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -81,7 +81,13 @@ func crearTablas() {
 					  CREATE TABLE consumo  (nrotarjeta 	char(16),
 											 codseguridad 	char(4),
 											 nrocomercio 	int,
-											 monto 			decimal(7,2));`)
+											 monto 			decimal(7,2));
+											 
+					 CREATE SEQUENCE seq_nrorechazo START WITH 1 INCREMENT BY 1;
+					 
+					 CREATE SEQUENCE seq_nrocompra 	START WITH 1 INCREMENT BY 1;
+					 
+					 CREATE SEQUENCE seq_nroalerta 	START WITH 1 INCREMENT BY 1;`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -113,7 +119,6 @@ func crearFKs() {
 	_, err = db.Exec(`ALTER TABLE tarjeta ADD CONSTRAINT tarjeta_nrocliente_fk FOREIGN KEY (nrocliente) REFERENCES cliente(nrocliente);
 					  ALTER TABLE compra ADD CONSTRAINT compra_nrotarjeta_fk FOREIGN KEY (nrotarjeta) REFERENCES tarjeta(nrotarjeta);
 					  ALTER TABLE compra ADD CONSTRAINT compra_nrocomercio_fk FOREIGN KEY (nrocomercio) REFERENCES comercio(nrocomercio);
-					  ALTER TABLE rechazo ADD CONSTRAINT rechazo_nrotarjeta_fk FOREIGN KEY (nrotarjeta) REFERENCES tarjeta(nrotarjeta);
 					  ALTER TABLE rechazo ADD CONSTRAINT rechazo_nrocomercio_fk FOREIGN KEY (nrocomercio) REFERENCES comercio(nrocomercio);
 					  ALTER TABLE cabecera ADD CONSTRAINT cabecera_nrotarjeta_fk FOREIGN KEY (nrotarjeta) REFERENCES tarjeta(nrotarjeta);
 					  ALTER TABLE detalle ADD CONSTRAINT detalle_cabecera_fk FOREIGN KEY (nroresumen) REFERENCES cabecera(nroresumen);
@@ -143,7 +148,6 @@ func borrarFKs() {
 	_, err = db.Exec(`ALTER TABLE tarjeta DROP CONSTRAINT tarjeta_nrocliente_fk;
 					  ALTER TABLE compra DROP CONSTRAINT compra_nrotarjeta_fk;
 					  ALTER TABLE compra DROP CONSTRAINT compra_nrocomercio_fk;
-					  ALTER TABLE rechazo DROP CONSTRAINT rechazo_nrotarjeta_fk;
 					  ALTER TABLE rechazo DROP CONSTRAINT rechazo_nrocomercio_fk;
 					  ALTER TABLE cabecera DROP CONSTRAINT cabecera_nrotarjeta_fk;
 					  ALTER TABLE detalle DROP CONSTRAINT detalle_cabecera_fk;
