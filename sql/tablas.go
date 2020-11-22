@@ -122,7 +122,6 @@ func crearFKs() {
 					  ALTER TABLE rechazo ADD CONSTRAINT rechazo_nrocomercio_fk FOREIGN KEY (nrocomercio) REFERENCES comercio(nrocomercio);
 					  ALTER TABLE cabecera ADD CONSTRAINT cabecera_nrotarjeta_fk FOREIGN KEY (nrotarjeta) REFERENCES tarjeta(nrotarjeta);
 					  ALTER TABLE detalle ADD CONSTRAINT detalle_cabecera_fk FOREIGN KEY (nroresumen) REFERENCES cabecera(nroresumen);
-					  ALTER TABLE alerta ADD CONSTRAINT alerta_nrotarjeta_fk FOREIGN KEY (nrotarjeta) REFERENCES tarjeta(nrotarjeta);
 					  ALTER TABLE alerta ADD CONSTRAINT alerta_nrorechazo_fk FOREIGN KEY (nrorechazo) REFERENCES rechazo(nrorechazo);`)
 	if err != nil {
 		log.Fatal(err)
@@ -151,7 +150,6 @@ func borrarFKs() {
 					  ALTER TABLE rechazo DROP CONSTRAINT rechazo_nrocomercio_fk;
 					  ALTER TABLE cabecera DROP CONSTRAINT cabecera_nrotarjeta_fk;
 					  ALTER TABLE detalle DROP CONSTRAINT detalle_cabecera_fk;
-					  ALTER TABLE alerta DROP CONSTRAINT alerta_nrotarjeta_fk;
 					  ALTER TABLE alerta DROP CONSTRAINT alerta_nrorechazo_fk;`)
 	if err != nil {
 		log.Fatal(err)
