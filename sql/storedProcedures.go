@@ -60,7 +60,6 @@ func autorizacionCompra(){
 	_, err = db.Query(`
 	CREATE OR REPLACE FUNCTION autorizacion_compra(numtarjeta char(16), codseg char(4), numcomercio int, montocompra decimal(7,2)) RETURNS boolean AS $$
 	DECLARE
-		ret boolean;
 		tarj record;
 		monto_compras_pendientes int;
 		monto_total int;
@@ -69,7 +68,6 @@ func autorizacionCompra(){
 		fecha_actual char(6);
 	
 	BEGIN
-		ret := true;
 		
 		------------------
 		--    Caso 1    --
@@ -79,14 +77,14 @@ func autorizacionCompra(){
 		
 		IF not found THEN
 			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'tarjeta no valida o no vigente');
-			ret := false;
+			return false;
 		END IF;
 		
 		--Tarjeta no esta vigente--
 		
-		IF tarj.estado != 'vigente' THEN
+		IF tarj.estado != 'vigente' AND tarj.estado != 'suspendida' THEN
 			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'tarjeta no valida o no vigente');
-			ret := false;
+			return false;
 		END IF;
 		
 		--              --
@@ -99,7 +97,7 @@ func autorizacionCompra(){
 		
 		IF tarj.codseguridad != codseg THEN
 			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'codigo de seguridad invalido');
-			ret := false;
+			return false;
 		END IF;
 		
 		--              --
@@ -115,7 +113,7 @@ func autorizacionCompra(){
 		
 		IF tarj.limitecompra < monto_total THEN
 			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'supera limite de tarjeta');
-			ret := false;
+			return false;
 		END IF;
 		
 		PERFORM chequear_cantidad_rechazos(CAST(numtarjeta AS char(16)));
@@ -134,7 +132,7 @@ func autorizacionCompra(){
 		
 		IF tarj.validahasta < fecha_actual THEN
 			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'plazo de vigencia expirado');
-			ret := false;
+			return false;
 		END IF;
 		
 		--              --
@@ -147,7 +145,7 @@ func autorizacionCompra(){
 		
 		IF tarj.estado = 'suspendida' THEN
 			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'la tarjeta se encuentra suspendida');
-			ret := false;
+			return false;
 		END IF;	
 		
 		--              --
@@ -156,13 +154,11 @@ func autorizacionCompra(){
 		------------------
 		--Compra exitosa--
 		
-		IF ret = true THEN
-			INSERT INTO compra VALUES(nextval('seq_nrocompra'), numtarjeta, numcomercio, CURRENT_TIMESTAMP, montocompra, true);
-		END IF;
+		INSERT INTO compra VALUES(nextval('seq_nrocompra'), numtarjeta, numcomercio, CURRENT_TIMESTAMP, montocompra, true);
 		
 		--              --
 		------------------
-		return ret;
+		return true;
 	END
 	$$ LANGUAGE PLPGSQL;`)
 
