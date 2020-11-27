@@ -43,7 +43,8 @@ func mostrarMenu() {
 	fmt.Println("|8. Borrar todos los datos                |\n-------------------------------------------")	
 	fmt.Println("|9. Probar consumo                        |\n-------------------------------------------")	
 	fmt.Println("|10. Crear base de datos no SQL           |\n-------------------------------------------")
-	fmt.Println("|11. Salir                                |\n-------------------------------------------")
+	fmt.Println("|11. Generar resumen                      |\n-------------------------------------------")
+	fmt.Println("|12. Salir                                |\n-------------------------------------------")
 }
 
 func manejarOpciones(opcion int) bool {
@@ -79,6 +80,9 @@ func manejarOpciones(opcion int) bool {
 		BDnoSQL()
 		fmt.Println("Base de datos no SQL creada.")
 	case opcion == 11:
+		sql.ProbarResumen()
+		fmt.Println("OK")
+	case opcion == 12:
 		return false
 	default:
 		fmt.Println("Ingrese un numero valido.")

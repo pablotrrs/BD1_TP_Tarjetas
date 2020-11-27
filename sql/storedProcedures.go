@@ -237,3 +237,62 @@ func triggerstiempo(){
 	
 	trgTiempoCompras();
 }
+
+func generarResumen(){
+		_, err = db.Query(`
+	CREATE OR REPLACE FUNCTION generarresumen(numCliente int, mesIN int) RETURNS void AS $$
+
+	DECLARE
+		clienteDEC record;
+		tarjetaDEC record;
+		contResumen int;
+		nomComercioDEC record;
+		compraDEC record;
+		contLinea int;
+		montofinal decimal(9,2);
+		cierreTarjetaDEC record;
+		
+		
+	BEGIN
+			contLinea := 1;
+			montofinal := 0;
+	
+			SELECT * INTO clienteDEC FROM cliente WHERE nrocliente = numCLiente;
+			SELECT * INTO tarjetaDEC FROM tarjeta WHERE nrocliente = numCLiente;	
+			SELECT * INTO cierreTarjetaDEC FROM cierre WHERE mes = mesIN and terminacion = substring(tarjetaDEC.nrotarjeta,16)::int;
+			
+			contResumen := 0;
+			contResumen := contResumen + count(*) from cabecera;
+									
+			FOR compraDEC IN SELECT * FROM compra WHERE pagado = false AND fecha::date >=  cierreTarjetaDEC.fechainicio AND fecha::date <= cierreTarjetaDEC.fechacierre
+			LOOP	 
+				SELECT * INTO nomComercioDEC FROM comercio WHERE nrocomercio = compraDEC.nrocomercio;
+				INSERT INTO detalle VALUES (contResumen + 1, 
+											contLinea,
+											compraDEC.fecha,			
+											nomComercioDEC.nombre, 
+											compraDEC.monto
+											);	
+				contLinea := contLinea + 1;	
+				montofinal := montofinal + compraDEC.monto;							
+			END LOOP;													
+							
+			INSERT INTO cabecera VALUES (contResumen + 1, 
+										clienteDEC.nombre,
+										clienteDEC.apellido,
+										clienteDEC.domicilio,
+										tarjetaDEC.nrotarjeta,
+										cierreTarjetaDEC.fechainicio, 
+										cierreTarjetaDEC.fechacierre, 
+										cierreTarjetaDEC.fechavto,
+										montofinal
+										);														
+		
+	END
+$$ LANGUAGE PLPGSQL;`)
+
+	if err != nil {
+		log.Fatal(err)
+	}		
+		
+}
