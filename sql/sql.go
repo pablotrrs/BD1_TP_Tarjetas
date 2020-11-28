@@ -52,10 +52,6 @@ func BorrarDatos() {
 	borrarDatos()
 }
 
-func ProbarConsumo() {
-	probarConsumo()
-}
-
 func crearDB() {
 	db, err := sql.Open("postgres", "user=postgres host=localhost dbname=postgres sslmode=disable")
 	if err != nil {
@@ -84,7 +80,7 @@ func BorrarDB() {
 	}
 }
 
-func probarConsumo() {
+func ProbarConsumo() {
 	autorizacionCompra()
 	crearTriggers()
 	generarConsumos()	
