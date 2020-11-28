@@ -25,11 +25,6 @@ func main() {
 	}
 }
 
-func verificarError(err error){
-		if err != nil {
-        log.Fatal(err)
-    }
-}
 
 func mostrarMenu() {
 	fmt.Println("-------------------------------------------\n|Seleccione una opción y presione enter   |\n-------------------------------------------")
@@ -151,87 +146,111 @@ func BDnoSQL() {
 	compra3 := Compra{3, "4000001234567899", 523, "2020-04-30 00:00:00", 850.00, true}
 	
 	dataCliente1, err := json.Marshal(cliente1)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}
 	 CreateUpdate(db   , "cliente", []byte(strconv.Itoa(cliente1.Nrocliente)), dataCliente1 )
-	     resultadoCliente1, err := ReadUnique(db, "cliente", []byte(strconv.Itoa(cliente1.Nrocliente)))
-    fmt.Printf("%s\n", resultadoCliente1)
+	     //resultadoCliente1, err := ReadUnique(db, "cliente", []byte(strconv.Itoa(cliente1.Nrocliente)))
+    //fmt.Printf("%s\n", resultadoCliente1)
     
     
 	dataCliente2, err := json.Marshal(cliente2)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}	
 	 CreateUpdate(db   , "cliente", []byte(strconv.Itoa(cliente2.Nrocliente)), dataCliente2 )
-	     resultadoCliente2, err := ReadUnique(db, "cliente", []byte(strconv.Itoa(cliente2.Nrocliente)))
-    fmt.Printf("%s\n", resultadoCliente2)
+	     //resultadoCliente2, err := ReadUnique(db, "cliente", []byte(strconv.Itoa(cliente2.Nrocliente)))
+    //fmt.Printf("%s\n", resultadoCliente2)
     
     
 	dataCliente3, err := json.Marshal(cliente3)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}	
 	 CreateUpdate(db   , "cliente", []byte(strconv.Itoa(cliente3.Nrocliente)), dataCliente3 )
-	     resultadoCliente3, err := ReadUnique(db, "cliente", []byte(strconv.Itoa(cliente3.Nrocliente)))
-    fmt.Printf("%s\n", resultadoCliente3)
+	     //resultadoCliente3, err := ReadUnique(db, "cliente", []byte(strconv.Itoa(cliente3.Nrocliente)))
+    //fmt.Printf("%s\n", resultadoCliente3)
     
     
 	dataComercio1, err := json.Marshal(comercio1)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}	
 	 CreateUpdate(db   , "comercio", []byte(strconv.Itoa(comercio1.Nrocomercio)), dataComercio1 )
-	     resultadoComercio1, err := ReadUnique(db, "comercio", []byte(strconv.Itoa(comercio1.Nrocomercio)))
-    fmt.Printf("%s\n", resultadoComercio1)
+	     //resultadoComercio1, err := ReadUnique(db, "comercio", []byte(strconv.Itoa(comercio1.Nrocomercio)))
+    //fmt.Printf("%s\n", resultadoComercio1)
     
     
 	dataComercio2, err := json.Marshal(comercio2)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}	
 	 CreateUpdate(db   , "comercio", []byte(strconv.Itoa(comercio2.Nrocomercio)), dataComercio2 )
-	     resultadoComercio2, err := ReadUnique(db, "comercio", []byte(strconv.Itoa(comercio2.Nrocomercio)))
-    fmt.Printf("%s\n", resultadoComercio2)
+	     //resultadoComercio2, err := ReadUnique(db, "comercio", []byte(strconv.Itoa(comercio2.Nrocomercio)))
+    //fmt.Printf("%s\n", resultadoComercio2)
     
     
 	dataComercio3, err := json.Marshal(comercio3)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}	
 	 CreateUpdate(db   , "comercio", []byte(strconv.Itoa(comercio3.Nrocomercio)), dataComercio3 )
-	     resultadoComercio3, err := ReadUnique(db, "comercio", []byte(strconv.Itoa(comercio3.Nrocomercio)))
-    fmt.Printf("%s\n", resultadoComercio3)
+	     //resultadoComercio3, err := ReadUnique(db, "comercio", []byte(strconv.Itoa(comercio3.Nrocomercio)))
+    //fmt.Printf("%s\n", resultadoComercio3)
     
     
 	dataTarjeta1, err := json.Marshal(tarjeta1)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}		
 	 CreateUpdate(db   , "tarjeta", []byte(tarjeta1.Nrotarjeta), dataTarjeta1 )
-	     resultadoTarjeta1, err := ReadUnique(db, "tarjeta", []byte(tarjeta1.Nrotarjeta))
-    fmt.Printf("%s\n", resultadoTarjeta1)
+	    // resultadoTarjeta1, err := ReadUnique(db, "tarjeta", []byte(tarjeta1.Nrotarjeta))
+    //fmt.Printf("%s\n", resultadoTarjeta1)
     
     
 	dataTarjeta2, err := json.Marshal(tarjeta2)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}	
 	 CreateUpdate(db   , "tarjeta", []byte(tarjeta2.Nrotarjeta), dataTarjeta2 )
-	     resultadoTarjeta2, err := ReadUnique(db, "tarjeta", []byte(tarjeta2.Nrotarjeta))
-    fmt.Printf("%s\n", resultadoTarjeta2)
+	   //  resultadoTarjeta2, err := ReadUnique(db, "tarjeta", []byte(tarjeta2.Nrotarjeta))
+   // fmt.Printf("%s\n", resultadoTarjeta2)
     
     
 	dataTarjeta3, err := json.Marshal(tarjeta3)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}		
 	 CreateUpdate(db   , "tarjeta", []byte(tarjeta3.Nrotarjeta), dataTarjeta3 )
-	     resultadoTarjeta3, err := ReadUnique(db, "tarjeta", []byte(tarjeta3.Nrotarjeta))
-    fmt.Printf("%s\n", resultadoTarjeta3)
+	    // resultadoTarjeta3, err := ReadUnique(db, "tarjeta", []byte(tarjeta3.Nrotarjeta))
+    //fmt.Printf("%s\n", resultadoTarjeta3)
     
     
 	dataCompra1, err := json.Marshal(compra1)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}		
 	 CreateUpdate(db   , "compra", []byte(strconv.Itoa(compra1.Nrooperacion)), dataCompra1 )
-	     resultadoCompra1, err := ReadUnique(db, "compra", []byte(strconv.Itoa(compra1.Nrooperacion)))
-    fmt.Printf("%s\n", resultadoCompra1)
+	    // resultadoCompra1, err := ReadUnique(db, "compra", []byte(strconv.Itoa(compra1.Nrooperacion)))
+   // fmt.Printf("%s\n", resultadoCompra1)
     
     
 	dataCompra2, err := json.Marshal(compra2)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}	
 	 CreateUpdate(db   , "compra", []byte(strconv.Itoa(compra2.Nrooperacion)), dataCompra2 )
-	     resultadoCompra2, err := ReadUnique(db, "compra", []byte(strconv.Itoa(compra2.Nrooperacion)))
-    fmt.Printf("%s\n", resultadoCompra2)
+	  //   resultadoCompra2, err := ReadUnique(db, "compra", []byte(strconv.Itoa(compra2.Nrooperacion)))
+    //fmt.Printf("%s\n", resultadoCompra2)
     
     
 	dataCompra3, err := json.Marshal(compra3)
-	verificarError(err)	
+	if err != nil{
+		log.Fatal(err)
+	}		
 	 CreateUpdate(db   , "compra", []byte(strconv.Itoa(compra3.Nrooperacion)), dataCompra3 )
-	     resultadoCompra3, err := ReadUnique(db, "compra", []byte(strconv.Itoa(compra3.Nrooperacion)))
-    fmt.Printf("%s\n", resultadoCompra3)	
+	   //  resultadoCompra3, err := ReadUnique(db, "compra", []byte(strconv.Itoa(compra3.Nrooperacion)))
+   // fmt.Printf("%s\n", resultadoCompra3)	
 }
 
 func CreateUpdate(db *bolt.DB, bucketName string, key []byte, value []byte) error {
