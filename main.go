@@ -33,57 +33,57 @@ func verificarError(err error){
 
 func mostrarMenu() {
 	fmt.Println("-------------------------------------------\n|Seleccione una opción y presione enter   |\n-------------------------------------------")
+	fmt.Println("|0. Salir                                 |\n-------------------------------------------")	
 	fmt.Println("|1. Crear base de datos                   |\n-------------------------------------------")
-	fmt.Println("|2. Borrar base de datos                  |\n-------------------------------------------")
-	fmt.Println("|3. Crear tablas                          |\n-------------------------------------------")
-	fmt.Println("|4. Borrar tablas                         |\n-------------------------------------------")	
-	fmt.Println("|5. Crear PK's & FK's                     |\n-------------------------------------------")
-	fmt.Println("|6. Borrar PK's & FK's                    |\n-------------------------------------------")
-	fmt.Println("|7. Cargar todos los datos                |\n-------------------------------------------")
-	fmt.Println("|8. Borrar todos los datos                |\n-------------------------------------------")	
-	fmt.Println("|9. Probar consumo                        |\n-------------------------------------------")	
-	fmt.Println("|10. Crear base de datos no SQL           |\n-------------------------------------------")
-	fmt.Println("|11. Generar resumen                      |\n-------------------------------------------")
-	fmt.Println("|12. Salir                                |\n-------------------------------------------")
+	fmt.Println("|2. Crear tablas                          |\n-------------------------------------------")	
+	fmt.Println("|3. Crear PK's & FK's                     |\n-------------------------------------------")	
+	fmt.Println("|4. Cargar todos los datos                |\n-------------------------------------------")
+	fmt.Println("|5. Probar consumo                        |\n-------------------------------------------")			
+	fmt.Println("|6. Generar resumen                       |\n-------------------------------------------")
+	fmt.Println("|7. Crear base de datos no SQL            |\n-------------------------------------------")
+	fmt.Println("|8. Borrar base de datos                  |\n-------------------------------------------")	
+	fmt.Println("|9. Borrar tablas                         |\n-------------------------------------------")	
+	fmt.Println("|10. Borrar PK's & FK's                   |\n-------------------------------------------")
+	fmt.Println("|11. Borrar todos los datos               |\n-------------------------------------------")	
 }
 
 func manejarOpciones(opcion int) bool {
 	switch {
+	case opcion == 0:
+		return false		
 	case opcion == 1:
 		sql.CrearDB()
 		fmt.Println("Base de datos creada.")
 	case opcion == 2:
-		sql.BorrarBD()
-		fmt.Println("Base de datos borrada.")
-	case opcion == 3:
 		sql.CrearTablas()
-		fmt.Println("Tablas creadas.")
-	case opcion == 4:
-		sql.BorrarTablas()
-		fmt.Println("Tablas borradas.")		
-	case opcion == 5:
+		fmt.Println("Tablas creadas.")		
+	case opcion == 3:
 		sql.CrearPKsyFKs()
 		fmt.Println("PK's y FK's creadas.")
-	case opcion == 6:
-		sql.BorrarPKsyFKs()
-		fmt.Println("PK's y FK's borradas.")
-	case opcion == 7:
+	case opcion == 4:
 		sql.CargarDatos()
-		fmt.Println("Todos los datos fueron cargados.")
-	case opcion == 8:
-		sql.BorrarDatos()
-		fmt.Println("Todos los datos fueron borrados.")		
-	case opcion == 9:
+		fmt.Println("Todos los datos fueron cargados.")		
+	case opcion == 5:
 		sql.ProbarConsumo()
 		fmt.Println("Probado.")		
-	case opcion == 10:
-		BDnoSQL()
-		fmt.Println("Base de datos no SQL creada.")
-	case opcion == 11:
+	case opcion == 6:
 		sql.ProbarResumen()
-		fmt.Println("OK")
-	case opcion == 12:
-		return false
+		fmt.Println("Ok.")						
+	case opcion == 7:
+		BDnoSQL()
+		fmt.Println("Base de datos no SQL creada.")		
+	case opcion == 8:
+		sql.BorrarBD()
+		fmt.Println("Base de datos borrada.")
+	case opcion == 9:
+		sql.BorrarTablas()
+		fmt.Println("Tablas borradas.")		
+	case opcion == 10:
+		sql.BorrarPKsyFKs()
+		fmt.Println("PK's y FK's borradas.")
+	case opcion == 11:
+		sql.BorrarDatos()
+		fmt.Println("Todos los datos fueron borrados.")	
 	default:
 		fmt.Println("Ingrese un numero valido.")
 	}

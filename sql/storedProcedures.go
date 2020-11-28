@@ -46,7 +46,7 @@ func autorizacionCompra(){
 				
 			IF cantidad_rechazos > 1 THEN
 				UPDATE tarjeta SET estado = 'suspendida' where nrotarjeta = numtarjeta;   
-				INSERT INTO alerta VALUES(nextval('seq_nroalerta'), numtarjeta, CURRENT_TIMESTAMP, currval('seq_nrorechazo'), 0, 'suspencion preventiva'); 
+				INSERT INTO alerta VALUES(nextval('seq_nroalerta'), numtarjeta, CURRENT_TIMESTAMP, null, 32, 'suspencion preventiva'); 
 			
 			END IF;
 			
@@ -89,6 +89,19 @@ func autorizacionCompra(){
 		
 		--              --
 		------------------
+
+		------------------
+		--    Caso 5    --
+		
+		--Tarjeta suspendida--
+		
+		IF tarj.estado = 'suspendida' THEN
+			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'la tarjeta se encuentra suspendida');
+			return false;
+		END IF;	
+		
+		--              --
+		------------------
 		
 		------------------
 		--    Caso 2    --
@@ -106,21 +119,6 @@ func autorizacionCompra(){
 		------------------
 		--    Caso 3    --
 		
-		-- Limite de compra superado --
-		
-		SELECT SUM(monto) INTO monto_compras_pendientes FROM compra WHERE tarj.nrotarjeta = numtarjeta AND pagado = false;
-		monto_total := monto_compras_pendientes + montocompra;
-		
-		IF tarj.limitecompra < monto_total THEN
-			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'supera limite de tarjeta');
-			return false;
-		END IF;
-		
-		PERFORM chequear_cantidad_rechazos(CAST(numtarjeta AS char(16)));
-		
-		--              --
-		------------------
-
 		------------------
 		--    Caso 4    --
 		
@@ -137,20 +135,21 @@ func autorizacionCompra(){
 		
 		--              --
 		------------------
+
+		-- Limite de compra superado --
 		
-		------------------
-		--    Caso 5    --
+		SELECT SUM(monto) INTO monto_compras_pendientes FROM compra WHERE tarj.nrotarjeta = numtarjeta AND pagado = false;
+		monto_total := monto_compras_pendientes + montocompra;
 		
-		--Tarjeta suspendida--
-		
-		IF tarj.estado = 'suspendida' THEN
-			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'la tarjeta se encuentra suspendida');
+		IF tarj.limitecompra < monto_total THEN
+			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'supera limite de tarjeta');
+			PERFORM chequear_cantidad_rechazos(CAST(numtarjeta AS char(16)));
 			return false;
-		END IF;	
-		
+		END IF;
+
 		--              --
 		------------------
-		
+			
 		------------------
 		--Compra exitosa--
 		
@@ -176,11 +175,8 @@ func cargar_alerta(){
 	_, err = db.Query(`
 		CREATE OR REPLACE FUNCTION cargar_alerta() RETURNS trigger AS $$
 		BEGIN
-			IF new.motivo = 'supera limite de tarjeta' THEN
-				INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, new.fecha, new.nrorechazo, 32, new.motivo);
-			ELSE
-				INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, new.fecha, new.nrorechazo, 0, new.motivo);
-			END IF;
+
+			INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, new.fecha, new.nrorechazo, 0, new.motivo);
 			
 		return new;			
 		END
@@ -213,19 +209,20 @@ func triggerstiempo(){
 			SELECT codigopostal INTO cod_postal_anterior FROM comercio WHERE nrocomercio = ultima_compra.nrocomercio;
 			SELECT codigopostal INTO cod_postal_actual FROM comercio WHERE nrocomercio = new.nrocomercio;
 			
-			--Alerta por compras en menos de 1 minuto comercios con el mismo codigo postal--
+			--Alerta por compras en menos de 1 minuto comercios con el mismo codigo postal
+			
 			IF diferencia_tiempo < 1 and ultima_compra.nrocomercio != new.nrocomercio and cod_postal_anterior = cod_postal_actual THEN
-				INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, CURRENT_TIMESTAMP, null, 1, 'Compra en menos de 1 minuto en una misma zona');
+				INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, CURRENT_TIMESTAMP, null, 1, 'compra en menos de 1 minuto en una misma zona');
 				return new;
 			END IF;
 
-			--Alerta por compras en menos de 5 minutos en comercios con diferentes codigos postales--
+			--Alerta por compras en menos de 5 minutos en comercios con diferentes codigos postales
+			
 			IF diferencia_tiempo < 5 and ultima_compra.nrocomercio != new.nrocomercio and cod_postal_anterior != cod_postal_actual THEN
-				INSERT INTO alerta VALUES(nextval('seq_nroalerta'),new.nrotarjeta, CURRENT_TIMESTAMP, null, 5, 'Compra en menos de 5 minutos en diferentes zonas');
+				INSERT INTO alerta VALUES(nextval('seq_nroalerta'),new.nrotarjeta, CURRENT_TIMESTAMP, null, 5, 'compra en menos de 5 minutos en diferentes zonas');
 				return new;
 			END IF;
 			
-			--Alerta por 
 			
 		return new;			
 		END
