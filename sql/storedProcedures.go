@@ -260,20 +260,7 @@ func generarResumen(){
 			
 			contResumen := 0;
 			contResumen := contResumen + count(*) from cabecera;
-									
-			FOR compraDEC IN SELECT * FROM compra WHERE pagado = false AND fecha::date >=  cierreTarjetaDEC.fechainicio AND fecha::date <= cierreTarjetaDEC.fechacierre
-			LOOP	 
-				SELECT * INTO nomComercioDEC FROM comercio WHERE nrocomercio = compraDEC.nrocomercio;
-				INSERT INTO detalle VALUES (contResumen + 1, 
-											contLinea,
-											compraDEC.fecha,			
-											nomComercioDEC.nombre, 
-											compraDEC.monto
-											);	
-				contLinea := contLinea + 1;	
-				montofinal := montofinal + compraDEC.monto;							
-			END LOOP;													
-							
+				
 			INSERT INTO cabecera VALUES (contResumen + 1, 
 										clienteDEC.nombre,
 										clienteDEC.apellido,
@@ -284,7 +271,24 @@ func generarResumen(){
 										cierreTarjetaDEC.fechavto,
 										montofinal
 										);														
-		
+			
+									
+			FOR compraDEC IN SELECT * FROM compra WHERE nrotarjeta = tarjetaDEC.nrotarjeta AND pagado = false AND fecha::date >=  cierreTarjetaDEC.fechainicio AND fecha::date <= cierreTarjetaDEC.fechacierre
+			LOOP	 
+				SELECT * INTO nomComercioDEC FROM comercio WHERE nrocomercio = compraDEC.nrocomercio;
+				INSERT INTO detalle VALUES (contResumen + 1, 
+											contLinea,
+											compraDEC.fecha,			
+											nomComercioDEC.nombre, 
+											compraDEC.monto
+											);	
+				contLinea := contLinea + 1;	
+				montofinal := montofinal + compraDEC.monto;							
+			END LOOP;	
+			
+			UPDATE cabecera SET total = montofinal WHERE nrotarjeta = tarjetaDEC.nrotarjeta	AND desde =	cierreTarjetaDEC.fechainicio AND hasta = cierreTarjetaDEC.fechacierre;										
+							
+			
 	END
 $$ LANGUAGE PLPGSQL;`)
 

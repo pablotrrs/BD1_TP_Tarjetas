@@ -88,31 +88,9 @@ func ProbarConsumo() {
 }
 
 func ProbarResumen(){
-	crearCompras()
 	generarResumen()
-	
-	_, err = db.Query(`
-	
-	SELECT generarresumen(22648991, 11); 
-
-	`)	
-	if err != nil {
-		log.Fatal(err)
-	}
-	
-	
+	testGenResumen()		
 }
 
-func crearCompras() {
-	_, err = db.Query(`
-	INSERT INTO compra VALUES(001, 4000001355435322, 538, '2020/11/10'::date, 100, false); 
-	INSERT INTO compra VALUES(002, 4000001355435322, 222, CURRENT_DATE, 500, false); 
-	INSERT INTO compra VALUES(003, 4000001355435322, 345, CURRENT_DATE, 50, false); 
-	INSERT INTO compra VALUES(004, 4000001355435322, 999, '2020/11/30'::date, 50, false); 
-	INSERT INTO compra VALUES(005, 4000001355435322, 588, '2020/11/05'::date, 80, false); 
-	`)	
-	if err != nil {
-		log.Fatal(err)
-	}	
-}
+
 
