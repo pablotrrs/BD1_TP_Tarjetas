@@ -159,9 +159,7 @@ _storedProcedures.go_ :
 
 - Descripción de los métodos del archivo _testResumen.go_ :
 
-* _testGenResumen()_ : Invoca al _stored procedure generarresumen()_ pasandole como parámetros el número del cliente y el período que se espera en el resumen.
-
-* _generarcompras()_ : Inserta valores en la tabla compras, para que luego se pueda verificar las tablas cabecera y detalle, según lo generado por el resumen.
+* _testGenResumen()_ : Invoca al _stored procedure generarresumen()_ pasandole como parámetros el número del cliente y el período que se espera en el resumen. Genera los resumenes a partir de lo que se encuentre en la tabla compras.
 
 * _testResultCabecera()_ : Crea el _stored procedure testCabecera()_ que retorna true si el completado de la tabla cabecera era como se esperaba.  
 
