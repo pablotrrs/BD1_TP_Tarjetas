@@ -6,7 +6,7 @@ import(
 
 func generarConsumos() {
 	_, err = db.Query(`
-						INSERT INTO consumo VALUES(CAST(4003300224374894 AS char(16)), CAST(284 AS char(4)), CAST(501 AS int), CAST(1200 AS decimal(7,2))); --compra
+						INSERT INTO consumo VALUES(CAST(4003300224374894 AS char(16)), CAST(284 AS char(4)), CAST(501 AS int), CAST(1200 AS decimal(7,2))); --compra						
 						INSERT INTO consumo VALUES(CAST(9000001234567899 AS char(16)), CAST(733 AS char(4)), CAST(666 AS int), CAST(1802 AS decimal(7,2))); --tarjeta inexistente
 						INSERT INTO consumo VALUES(CAST(4033002233062344 AS char(16)), CAST(202 AS char(4)), CAST(999 AS int), CAST(1500 AS decimal(7,2))); --tarjeta no vigente
 						INSERT INTO consumo VALUES(CAST(4034006634262869 AS char(16)), CAST(097 AS char(4)), CAST(222 AS int), CAST(3012 AS decimal(7,2))); --tarjeta suspendida
@@ -24,7 +24,22 @@ func generarConsumos() {
 						INSERT INTO compra VALUES(nextval('seq_nrocompra'), CAST(4003300224374894 AS char(16)), CAST(666 AS int), '2020-11-27 16:59:00.040539', CAST(3400 AS decimal(7,2)), false); -- alerta de 5 min
 						
 						INSERT INTO consumo VALUES(CAST(4032002134557009 AS char(16)), CAST(070 AS char(4)), CAST(569 AS int), CAST(50001 AS decimal(7,2))); --supera monto segunda vez 
-						INSERT INTO consumo VALUES(CAST(4032002134557009 AS char(16)), CAST(070 AS char(4)), CAST(569 AS int), CAST(50001 AS decimal(7,2))); --supera monto tercera vez y creo alerta de cambio de estado`)	
+						INSERT INTO consumo VALUES(CAST(4032002134557009 AS char(16)), CAST(070 AS char(4)), CAST(569 AS int), CAST(50001 AS decimal(7,2))); --supera monto tercera vez y creo alerta de cambio de estado
+
+
+						INSERT INTO consumo VALUES(CAST(4040071730767070 AS char(16)), CAST(810 AS char(4)), CAST(678 AS int), CAST(750 AS decimal(7,2)));
+						INSERT INTO consumo VALUES(CAST(4040071730767070 AS char(16)), CAST(810 AS char(4)), CAST(345 AS int), CAST(800 AS decimal(7,2)));
+						INSERT INTO consumo VALUES(CAST(4040071730767070 AS char(16)), CAST(810 AS char(4)), CAST(500 AS int), CAST(120 AS decimal(7,2)));
+						
+						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(888 AS int), CAST(2000 AS decimal(7,2)));
+						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(333 AS int), CAST(140 AS decimal(7,2)));
+						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(538 AS int), CAST(250 AS decimal(7,2)));
+						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(500 AS int), CAST(1200 AS decimal(7,2)));
+
+
+
+						
+						`)	
 	if err != nil {
 		log.Fatal(err)
 	}	
