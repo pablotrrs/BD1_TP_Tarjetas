@@ -79,14 +79,14 @@ func cargarDatos() {
 func borrarDatos(){
 	_, err = db.Exec(`
 					  DELETE FROM compra;
+					  DELETE FROM detalle;					  					  
+					  DELETE FROM cabecera;
 					  DELETE FROM tarjeta;
 					  DELETE FROM cliente;
+					  DELETE FROM alerta;					  
 					  DELETE FROM rechazo;
 					  DELETE FROM comercio;
 					  DELETE FROM cierre;
-					  DELETE FROM cabecera;
-					  DELETE FROM detalle;
-					  DELETE FROM alerta;
 					  DELETE FROM consumo;`)
 	if err != nil {
 		log.Fatal(err)

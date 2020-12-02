@@ -11,35 +11,23 @@ func generarConsumos() {
 						INSERT INTO consumo VALUES(CAST(4033002233062344 AS char(16)), CAST(202 AS char(4)), CAST(999 AS int), CAST(1500 AS decimal(7,2))); --tarjeta no vigente
 						INSERT INTO consumo VALUES(CAST(4034006634262869 AS char(16)), CAST(097 AS char(4)), CAST(222 AS int), CAST(3012 AS decimal(7,2))); --tarjeta suspendida
 						INSERT INTO consumo VALUES(CAST(4000001234567899 AS char(16)), CAST(111 AS char(4)), CAST(500 AS int), CAST(12501 AS decimal(7,2))); --codigo incorrecto
-						
-						INSERT INTO compra 	VALUES(nextval('seq_nrocompra'), '4032002134557009', 569, CURRENT_TIMESTAMP, 25000, false); -- para que la siguiente query sea efectiva
+						INSERT INTO consumo	VALUES(CAST(4032002134557009 AS char(16)), CAST(070 AS char(4)), CAST(569 AS int), CAST(25000 AS decimal(7,2))); -- para que la siguiente query sea efectiva
 						INSERT INTO consumo VALUES(CAST(4032002134557009 AS char(16)), CAST(070 AS char(4)), CAST(569 AS int), CAST(50001 AS decimal(7,2))); --supera monto primera vez
-					
 						INSERT INTO consumo VALUES(CAST(4000001234567899 AS char(16)), CAST(733 AS char(4)), CAST(400 AS int), CAST(22500 AS decimal(7,2))); --vencida
-						
-						INSERT INTO compra VALUES(nextval('seq_nrocompra'), CAST(4003300224374894 AS char(16)), CAST(501 AS int), '2020-11-27 16:50:00.040539', CAST(1500 AS decimal(7,2)), false); -- alerta de 1 min
-						INSERT INTO compra VALUES(nextval('seq_nrocompra'), CAST(4003300224374894 AS char(16)), CAST(123 AS int), '2020-11-27 16:50:50.040539', CAST(300 AS decimal(7,2)), false); -- alerta de 1 min
-						
-						INSERT INTO compra VALUES(nextval('seq_nrocompra'), CAST(4003300224374894 AS char(16)), CAST(501 AS int), '2020-11-27 16:55:00.040539', CAST(3200 AS decimal(7,2)), false); -- alerta de 5 min
-						INSERT INTO compra VALUES(nextval('seq_nrocompra'), CAST(4003300224374894 AS char(16)), CAST(666 AS int), '2020-11-27 16:59:00.040539', CAST(3400 AS decimal(7,2)), false); -- alerta de 5 min
-						
+						INSERT INTO consumo VALUES(CAST(4003300224374894 AS char(16)), CAST(284 AS char(4)), CAST(501 AS int), CAST(1500 AS decimal(7,2))); -- alerta de 1 min				
+						INSERT INTO consumo VALUES(CAST(4003300224374894 AS char(16)), CAST(284 AS char(4)), CAST(123 AS int), CAST(300 AS decimal(7,2))); -- alerta de 1 min										
+						INSERT INTO consumo VALUES(CAST(4003300224374894 AS char(16)), CAST(284 AS char(4)), CAST(501 AS int), CAST(3200 AS decimal(7,2))); -- alerta de 5 min		
+						INSERT INTO consumo VALUES(CAST(4003300224374894 AS char(16)), CAST(284 AS char(4)), CAST(666 AS int), CAST(3400 AS decimal(7,2))); -- alerta de 5 min			
 						INSERT INTO consumo VALUES(CAST(4032002134557009 AS char(16)), CAST(070 AS char(4)), CAST(569 AS int), CAST(50001 AS decimal(7,2))); --supera monto segunda vez 
 						INSERT INTO consumo VALUES(CAST(4032002134557009 AS char(16)), CAST(070 AS char(4)), CAST(569 AS int), CAST(50001 AS decimal(7,2))); --supera monto tercera vez y creo alerta de cambio de estado
-
-
+						
 						INSERT INTO consumo VALUES(CAST(4040071730767070 AS char(16)), CAST(810 AS char(4)), CAST(678 AS int), CAST(750 AS decimal(7,2)));
 						INSERT INTO consumo VALUES(CAST(4040071730767070 AS char(16)), CAST(810 AS char(4)), CAST(345 AS int), CAST(800 AS decimal(7,2)));
-						INSERT INTO consumo VALUES(CAST(4040071730767070 AS char(16)), CAST(810 AS char(4)), CAST(500 AS int), CAST(120 AS decimal(7,2)));
-						
+						INSERT INTO consumo VALUES(CAST(4040071730767070 AS char(16)), CAST(810 AS char(4)), CAST(500 AS int), CAST(120 AS decimal(7,2)));				
 						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(888 AS int), CAST(2000 AS decimal(7,2)));
 						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(333 AS int), CAST(140 AS decimal(7,2)));
 						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(538 AS int), CAST(250 AS decimal(7,2)));
-						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(500 AS int), CAST(1200 AS decimal(7,2)));
-
-
-
-						
-						`)	
+						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(500 AS int), CAST(1200 AS decimal(7,2)));`)	
 	if err != nil {
 		log.Fatal(err)
 	}	
@@ -86,6 +74,10 @@ func consumir() {
 			
 			FOR v_consumo IN SELECT * FROM consumo LOOP
 				PERFORM autorizacion_compra(v_consumo.nrotarjeta, v_consumo.codseguridad, v_consumo.nrocomercio, v_consumo.monto);
+				PERFORM * FROM compra WHERE nrotarjeta = '4032002134557009' and monto = 25000;	
+				IF found THEN
+					UPDATE compra SET pagado = true where nrotarjeta = '4032002134557009' and monto = 25000;   
+				END IF;
 			END LOOP;
 			
 		END
@@ -110,7 +102,7 @@ func testCompra() {
 			ret := true;
 			
 			SELECT * INTO v_consumo FROM consumo WHERE nrotarjeta = '4003300224374894';
-			PERFORM * FROM compra WHERE nrotarjeta = v_consumo.nrotarjeta and nrocomercio = v_consumo.nrocomercio and monto = v_consumo.monto and pagado = true;
+			PERFORM * FROM compra WHERE nrotarjeta = v_consumo.nrotarjeta and nrocomercio = v_consumo.nrocomercio and monto = v_consumo.monto;
 				
 			IF not found THEN
 				ret := ret and false;				
@@ -182,8 +174,8 @@ func testAutorizaciones() {
 			END IF;					
 			
 			-- Supera limite de tarjeta
-			
-			FOR v_consumo IN SELECT * FROM consumo WHERE nrotarjeta = '4032002134557009' LOOP
+					
+			FOR v_consumo IN SELECT * FROM consumo WHERE nrotarjeta = '4032002134557009' and monto != 25000 LOOP
 				PERFORM * FROM rechazo WHERE nrotarjeta = v_consumo.nrotarjeta and nrocomercio = v_consumo.nrocomercio and monto = v_consumo.monto and motivo = 'supera limite de tarjeta';
 				IF not found THEN
 					ret := ret and false;
