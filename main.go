@@ -87,41 +87,40 @@ func manejarOpciones(opcion int) bool {
 
 
 func BDnoSQL() {
-
 	type Cliente struct {
-	Nrocliente int
-	Nombre     string
-	Apellido   string
-	Domicilio  string
-	Telefono   string
-}
+		Nrocliente int
+		Nombre     string
+		Apellido   string
+		Domicilio  string
+		Telefono   string
+	}
 
-type Tarjeta struct {
-	Nrotarjeta   string
-	Nrocliente   int
-	Validadesde  string
-	Validahasta  string
-	Codseguridad string
-	Limitecompra int
-	Estado       string
-}
+	type Tarjeta struct {
+		Nrotarjeta   string
+		Nrocliente   int
+		Validadesde  string
+		Validahasta  string
+		Codseguridad string
+		Limitecompra int
+		Estado       string
+	}
 
-type Comercio struct {
-	Nrocomercio  int
-	Nombre       string
-	Domicilio    string
-	Codigopostal string
-	Telefono     string
-}
+	type Comercio struct {
+		Nrocomercio  int
+		Nombre       string
+		Domicilio    string
+		Codigopostal string
+		Telefono     string
+	}
 
-type Compra struct {
-	Nrooperacion int
-	Nrotarjeta   string
-	Nrocomercio  int
-	Fecha        string
-	Monto        int
-	Pagado       bool
-}
+	type Compra struct {
+		Nrooperacion int
+		Nrotarjeta   string
+		Nrocomercio  int
+		Fecha        string
+		Monto        int
+		Pagado       bool
+	}
 
 	db, err := bolt.Open("testBolt.db", 0600, nil)
 	if err != nil {
