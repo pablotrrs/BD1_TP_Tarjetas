@@ -116,10 +116,7 @@ func autorizacionCompra() {
 		
 		--              --
 		------------------
-
-		------------------
-		--    Caso 3    --
-		
+	
 		------------------
 		--    Caso 4    --
 		
@@ -136,6 +133,9 @@ func autorizacionCompra() {
 		
 		--              --
 		------------------
+
+		------------------
+		--    Caso 3    --
 
 		-- Limite de compra superado --
 		
