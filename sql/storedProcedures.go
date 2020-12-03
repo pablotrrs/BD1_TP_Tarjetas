@@ -1,6 +1,6 @@
 package sql
 
-import(
+import (
 	"log"
 )
 
@@ -21,22 +21,22 @@ func insertarCierres() {
 	$$ LANGUAGE PLPGSQL;`)
 	if err != nil {
 		log.Fatal(err)
-	}	
+	}
 }
 
-func autorizacionCompra(){
+func autorizacionCompra() {
 	_, err = db.Query(`
 		CREATE OR REPLACE FUNCTION cargar_rechazo(numtarjeta char(16), numcomercio int, montocompra decimal(7,2), mensaje text) RETURNS void AS $$
 		BEGIN
 			INSERT INTO rechazo VALUES(nextval('seq_nrorechazo'), numtarjeta, numcomercio, CURRENT_TIMESTAMP, montocompra, mensaje);
 			
 		END
-		$$ LANGUAGE PLPGSQL;`)	
+		$$ LANGUAGE PLPGSQL;`)
 
 	if err != nil {
 		log.Fatal(err)
-	}	
-	
+	}
+
 	_, err = db.Query(`
 		CREATE OR REPLACE FUNCTION chequear_cantidad_rechazos(numtarjeta char(16)) RETURNS void AS $$
 		DECLARE
@@ -52,11 +52,11 @@ func autorizacionCompra(){
 			END IF;
 			
 		END
-		$$ LANGUAGE PLPGSQL;`)	
+		$$ LANGUAGE PLPGSQL;`)
 
 	if err != nil {
 		log.Fatal(err)
-	}	
+	}
 
 	_, err = db.Query(`
 	CREATE OR REPLACE FUNCTION autorizacion_compra(numtarjeta char(16), codseg char(4), numcomercio int, montocompra decimal(7,2)) RETURNS boolean AS $$
@@ -167,12 +167,12 @@ func autorizacionCompra(){
 	}
 }
 
-func crearTriggers(){
+func crearTriggers() {
 	cargar_alerta()
 	triggerstiempo()
 }
 
-func cargar_alerta(){
+func cargar_alerta() {
 	_, err = db.Query(`
 		CREATE OR REPLACE FUNCTION cargar_alerta() RETURNS trigger AS $$
 		BEGIN
@@ -181,17 +181,17 @@ func cargar_alerta(){
 			
 		return new;			
 		END
-		$$ LANGUAGE PLPGSQL;`)	
+		$$ LANGUAGE PLPGSQL;`)
 
 	if err != nil {
 		log.Fatal(err)
-	}		
-	
-	trgCargarAlerta();
+	}
+
+	trgCargarAlerta()
 }
 
-func triggerstiempo(){
-		_, err = db.Query(`
+func triggerstiempo() {
+	_, err = db.Query(`
 		CREATE OR REPLACE FUNCTION compras_tiempo() RETURNS trigger AS $$
 		DECLARE
 			ultima_compra record;
@@ -227,17 +227,17 @@ func triggerstiempo(){
 			
 		return new;			
 		END
-		$$ LANGUAGE PLPGSQL;`)	
+		$$ LANGUAGE PLPGSQL;`)
 
 	if err != nil {
 		log.Fatal(err)
-	}		
-	
-	trgTiempoCompras();
+	}
+
+	trgTiempoCompras()
 }
 
-func generarResumen(){
-		_, err = db.Query(`
+func generarResumen() {
+	_, err = db.Query(`
 	CREATE OR REPLACE FUNCTION generarresumen(numCliente int, mesIN int, anioIN int) RETURNS void AS $$
 
 	DECLARE
@@ -299,6 +299,6 @@ $$ LANGUAGE PLPGSQL;`)
 
 	if err != nil {
 		log.Fatal(err)
-	}		
-		
+	}
+
 }

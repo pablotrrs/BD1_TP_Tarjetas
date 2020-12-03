@@ -1,6 +1,6 @@
 package sql
 
-import(
+import (
 	"log"
 )
 
@@ -27,21 +27,21 @@ func generarConsumos() {
 						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(888 AS int), CAST(2000 AS decimal(7,2)));
 						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(333 AS int), CAST(140 AS decimal(7,2)));
 						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(538 AS int), CAST(250 AS decimal(7,2)));
-						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(500 AS int), CAST(1200 AS decimal(7,2)));`)	
+						INSERT INTO consumo VALUES(CAST(4032003238867044 AS char(16)), CAST(379 AS char(4)), CAST(500 AS int), CAST(1200 AS decimal(7,2)));`)
 	if err != nil {
 		log.Fatal(err)
-	}	
+	}
 }
 
 func testFunciones() {
-	consumir() 
-	testCompra() 
-	testAutorizaciones() 
-	testAlertas() 
-	testAll()	
+	consumir()
+	testCompra()
+	testAutorizaciones()
+	testAlertas()
+	testAll()
 }
 
-func testAll(){
+func testAll() {
 	_, err = db.Query(`
 		CREATE OR REPLACE FUNCTION test_all() RETURNS boolean AS $$
 		DECLARE
@@ -59,10 +59,10 @@ func testAll(){
 			
 			return ret;
 		END
-		$$ LANGUAGE PLPGSQL;`)	
+		$$ LANGUAGE PLPGSQL;`)
 	if err != nil {
 		log.Fatal(err)
-	}		
+	}
 }
 
 func consumir() {
@@ -81,15 +81,15 @@ func consumir() {
 			END LOOP;
 			
 		END
-		$$ LANGUAGE PLPGSQL;`)	
+		$$ LANGUAGE PLPGSQL;`)
 	if err != nil {
 		log.Fatal(err)
 	}
-			
-	_, err = db.Query(`SELECT consumir();`)	
+
+	_, err = db.Query(`SELECT consumir();`)
 	if err != nil {
 		log.Fatal(err)
-	}	
+	}
 }
 
 func testCompra() {
@@ -111,10 +111,10 @@ func testCompra() {
 			return ret;
 			
 		END
-		$$ LANGUAGE PLPGSQL;`)	
+		$$ LANGUAGE PLPGSQL;`)
 	if err != nil {
 		log.Fatal(err)
-	}			
+	}
 }
 
 func testAutorizaciones() {
@@ -190,10 +190,10 @@ func testAutorizaciones() {
 		
 			return ret;
 		END
-		$$ LANGUAGE PLPGSQL;`)	
+		$$ LANGUAGE PLPGSQL;`)
 	if err != nil {
 		log.Fatal(err)
-	}		
+	}
 }
 
 func testAlertas() {
@@ -247,8 +247,8 @@ func testAlertas() {
 		
 			return ret;
 		END
-		$$ LANGUAGE PLPGSQL;`)	
+		$$ LANGUAGE PLPGSQL;`)
 	if err != nil {
 		log.Fatal(err)
-	}			
+	}
 }

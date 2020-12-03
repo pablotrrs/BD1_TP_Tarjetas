@@ -1,9 +1,9 @@
 package sql
 
-import(
+import (
 	"log"
 
-	_"github.com/lib/pq"
+	_ "github.com/lib/pq"
 )
 
 func cargarDatos() {
@@ -76,7 +76,7 @@ func cargarDatos() {
 	}
 }
 
-func borrarDatos(){
+func borrarDatos() {
 	_, err = db.Exec(`
 					  DELETE FROM compra;
 					  DELETE FROM detalle;					  					  

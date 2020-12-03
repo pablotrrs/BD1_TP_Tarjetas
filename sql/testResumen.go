@@ -1,11 +1,11 @@
 package sql
 
-import(
+import (
 	"log"
 )
 
-func testGenResumen(){
-	
+func testGenResumen() {
+
 	_, err = db.Query(`
 
 	SELECT generarresumen(14348789, 12, 2020); 
@@ -13,18 +13,17 @@ func testGenResumen(){
 	SELECT generarresumen(11448979, 12, 2020);  
 	SELECT generarresumen(11732790, 12, 2020);  
 
-	`)	
+	`)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	testResultCabecera()
 	testResultDetalle()
 }
 
-
-func testResultCabecera(){
-		_, err = db.Query(`
+func testResultCabecera() {
+	_, err = db.Query(`
 		CREATE OR REPLACE FUNCTION testCabecera() RETURNS boolean AS $$
 		DECLARE
 			ret boolean;
@@ -44,17 +43,16 @@ func testResultCabecera(){
 			return ret;
 			
 		END
-		$$ LANGUAGE PLPGSQL;`)	
-		
+		$$ LANGUAGE PLPGSQL;`)
+
 	if err != nil {
 		log.Fatal(err)
-	}	
-	
-}	
+	}
 
+}
 
-func testResultDetalle(){
-		_, err = db.Query(`
+func testResultDetalle() {
+	_, err = db.Query(`
 		CREATE OR REPLACE FUNCTION testDetalle() RETURNS boolean AS $$
 		DECLARE
 			ret boolean;
@@ -86,9 +84,9 @@ func testResultDetalle(){
 			return ret;
 			
 		END
-		$$ LANGUAGE PLPGSQL;`)	
-		
+		$$ LANGUAGE PLPGSQL;`)
+
 	if err != nil {
 		log.Fatal(err)
-	}	
-}	
+	}
+}

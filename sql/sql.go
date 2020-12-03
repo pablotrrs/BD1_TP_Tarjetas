@@ -22,15 +22,15 @@ func CrearDB() {
 }
 
 func BorrarBD() {
-	BorrarDB();
+	BorrarDB()
 }
 
-func CrearTablas(){
-	crearTablas();
+func CrearTablas() {
+	crearTablas()
 }
 
-func BorrarTablas(){
-	borrarTablas();
+func BorrarTablas() {
+	borrarTablas()
 }
 
 func CrearPKsyFKs() {
@@ -60,21 +60,21 @@ func crearDB() {
 
 	defer db.Close()
 
-    _, err = db.Exec(`CREATE DATABASE tarjeta`)
-	if err != nil {
-		log.Fatal(err)
-	}	
-}
-
-func BorrarDB() {
-	db,err := sql.Open("postgres", "user=postgres host=localhost dbname=postgres sslmode=disable")
+	_, err = db.Exec(`CREATE DATABASE tarjeta`)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
-    defer db.Close()
-   
-    _, err = db.Exec(`DROP DATABASE tarjeta`)
+}
+
+func BorrarDB() {
+	db, err := sql.Open("postgres", "user=postgres host=localhost dbname=postgres sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	_, err = db.Exec(`DROP DATABASE tarjeta`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -83,14 +83,11 @@ func BorrarDB() {
 func ProbarConsumo() {
 	autorizacionCompra()
 	crearTriggers()
-	generarConsumos()	
+	generarConsumos()
 	testFunciones()
 }
 
-func ProbarResumen(){
+func ProbarResumen() {
 	generarResumen()
-	testGenResumen()		
+	testGenResumen()
 }
-
-
-

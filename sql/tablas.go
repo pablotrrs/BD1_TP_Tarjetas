@@ -1,14 +1,14 @@
 package sql
 
-import(
+import (
 	"log"
 
-	_"github.com/lib/pq"
+	_ "github.com/lib/pq"
 )
 
 func crearTablas() {
 	borrarTablas()
-	
+
 	_, err = db.Exec(`CREATE SCHEMA public`) // Creo el schema tablas, contiene objetos (tablas, funciones, operadores, ...)
 	if err != nil {
 		log.Fatal(err)
