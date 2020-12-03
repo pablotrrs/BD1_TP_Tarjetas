@@ -84,7 +84,11 @@ func manejarOpciones(opcion int) bool {
 	return true
 }
 
-type Cliente struct {
+
+
+func BDnoSQL() {
+
+	type Cliente struct {
 	Nrocliente int
 	Nombre     string
 	Apellido   string
@@ -118,8 +122,6 @@ type Compra struct {
 	Monto        int
 	Pagado       bool
 }
-
-func BDnoSQL() {
 
 	db, err := bolt.Open("testBolt.db", 0600, nil)
 	if err != nil {
