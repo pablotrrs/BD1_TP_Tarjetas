@@ -144,11 +144,11 @@ func insertarCierres() {
 
 * _autorizacionCompra()_ : Contiene la lógica asociada a la autorización de una compra. Invoca a los _stored procedures cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje), chequear_cantidad_rechazos(numtarjeta), y autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)_.
 
+* _autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)_ : Crea un _stored procedure_ que toma como parámetros el número de una tarjeta, su código de seguridad, el número de un comercio, y el monto de la compra. Devuelve _true_ si la compra fue autorizada y _false_ si fue rechazada.
+
 * _cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje)_ : Crea un _stored procedure_ que toma como parámetros el número de una tarjeta, el número de un comercio, el monto de la compra y un mensaje. Inserta en la tabla _rechazo_ los valores antes mencionados.
 
 * _chequear_cantidad_rechazos(numtarjeta)_ : Crea un _stored procedure_ que toma como parámetro el número de un rechazo. Detecta si la tarjeta registra dos rechazos por exceso de límite en el mismo día. En tal caso, cambia el estado de la tarjeta a suspendida e inserta una nueva alerta con _codalerta_ 32 y el mensaje _'suspencion preventiva'_.
-
-* _autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)_ : Crea un _stored procedure_ que toma como parámetros el número de una tarjeta, su código de seguridad, el número de un comercio, y el monto de la compra. Devuelve _true_ si la compra fue autorizada y _false_ si fue rechazada.
 
 [source, go]
 ----
@@ -374,10 +374,10 @@ func triggerstiempo() {
 
 * _ProbarResumen()_ : Contiene la logica asociada a la generación de un resumen. Invoca a la funcion de generarResumen() y a testGenResumen().
 
-[source, go]
-----
 *  _generarresumen(numCliente, mesIN)_ : Crea un stored procedure que toma como parámetros el número que tiene asociado el cliente y el número de mes asociado al período que se quiera generar en el resumen. Inserta en la tabla cabecera el número de resumen, luego nombre, apellido, domicilio y número de tarjeta del cliente, se ingresan los cierres correspondiente a la terminación del numero de tarjeta y el mes pasado por parámetro. Y por último, el monto final que tiene que pagar el cliente en dicho período. Por otra parte, se inserta en la tabla detalle las compras (junto a sus fechas, montos y comercios) realizadas entre las fechas de 'desde' y 'hasta' de la tabla cabecera.
 
+[source, go]
+----
 func generarResumen() {
 	_, err = db.Query(`
 	CREATE OR REPLACE FUNCTION generarresumen(numCliente int, mesIN int, anioIN int) RETURNS void AS $$
