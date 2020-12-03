@@ -114,6 +114,30 @@ El programa está organizado en una carpeta y un archivo escrito en Go (main.go)
 * _borrarDatos()_ : Borra todos los datos almacenados en las diferentes tablas.
 * _InsertarCierres()_ : Ejecuta la función _insertarCierres()_ que crea la _stored procedure insertCierres()_ que genera todos los cierres del año 2020. Luego, realiza una consulta a esa _Stored Procedure_. 
 
+_insertarCierres()_
+[source, go]
+----
+//generate_series() genera series según el argumento pasado. Para cada ciclo del for genera valores distintos.
+func insertarCierres() {
+	_, err = db.Query(`
+	CREATE OR REPLACE FUNCTION insertcierres() RETURNS void AS $$
+	BEGIN
+		FOR i in 0..9 LOOP
+			INSERT INTO cierre VALUES(2020,generate_series(1,12),i,
+			generate_series('2020/01/01'::date,'2020/12/31','1 month'),
+			generate_series('2020/01/28'::date,'2020/12/31','1 month'),
+			generate_series('2020/01/28'::date,'2020/12/31','1 month')
+			);
+		END LOOP;
+		
+	END
+	$$ LANGUAGE PLPGSQL;`)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+----
+
 - Descripción de las funciones del archivo
 _storedProcedures.go_ :
 
@@ -279,11 +303,154 @@ func autorizacionCompra() {
 
 * _cargar_alerta()_ : Crea el _stored procedure cargar_alerta()_ que agrega una alerta con los valores insertados en la tabla rechazo. Con el codalerta correspondiente.
 
+_cargar_alerta()_
+[source, go]
+----
+func cargar_alerta() {
+	_, err = db.Query(`
+		CREATE OR REPLACE FUNCTION cargar_alerta() RETURNS trigger AS $$
+		BEGIN
+
+			INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, new.fecha, new.nrorechazo, 0, new.motivo);
+			
+		return new;			
+		END
+		$$ LANGUAGE PLPGSQL;`)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	trgCargarAlerta()
+}
+----
+
 * _triggerstiempos()_ :  Crea el _stored procedure compras_tiempo()_. Esta función chequea que la diferencia de tiempo entre las compras de una misma tarjeta. En caso de detectar dos compras en comercios con el mismo código postal y con tiempo menor a un minuto, se inserta una alerta con codalerta 1 y el mensaje _'Compra en menos de 1 minuto en una misma zona'_. En caso de detectar dos compras con lapso menor a 5 minutos con diferentes códigos postales se inserta una nueva alerta con codalerta 5 y el mensaje _'Compra en menos de 5 minutos en diferentes zonas'_.
 
+_triggerstiempo()_
+[source, go]
+----
+func triggerstiempo() {
+	_, err = db.Query(`
+		CREATE OR REPLACE FUNCTION compras_tiempo() RETURNS trigger AS $$
+		DECLARE
+			ultima_compra record;
+			diferencia_tiempo decimal;
+			cod_postal_anterior int;
+			cod_postal_actual int;
+			
+		BEGIN
+			SELECT * INTO ultima_compra FROM compra WHERE nrotarjeta = new.nrotarjeta ORDER BY nrooperacion DESC LIMIT 1;
+			
+			IF not found THEN
+				return new;
+			END IF;
+						
+			SELECT INTO diferencia_tiempo EXTRACT(EPOCH FROM (new.fecha - ultima_compra.fecha)) / 60;
+			SELECT codigopostal INTO cod_postal_anterior FROM comercio WHERE nrocomercio = ultima_compra.nrocomercio;
+			SELECT codigopostal INTO cod_postal_actual FROM comercio WHERE nrocomercio = new.nrocomercio;
+			
+			--Alerta por compras en menos de 1 minuto comercios con el mismo codigo postal
+			
+			IF diferencia_tiempo < 1 and ultima_compra.nrocomercio != new.nrocomercio and cod_postal_anterior = cod_postal_actual THEN
+				INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, CURRENT_TIMESTAMP, null, 1, 'compra en menos de 1 minuto en una misma zona');
+				return new;
+			END IF;
+
+			--Alerta por compras en menos de 5 minutos en comercios con diferentes codigos postales
+			
+			IF diferencia_tiempo < 5 and ultima_compra.nrocomercio != new.nrocomercio and cod_postal_anterior != cod_postal_actual THEN
+				INSERT INTO alerta VALUES(nextval('seq_nroalerta'),new.nrotarjeta, CURRENT_TIMESTAMP, null, 5, 'compra en menos de 5 minutos en diferentes zonas');
+				return new;
+			END IF;
+			
+			
+		return new;			
+		END
+		$$ LANGUAGE PLPGSQL;`)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	trgTiempoCompras()
+}
+----
+
+_ProbarResumen()_
+[source, go]
+----
 * _ProbarResumen()_ : Contiene la logica asociada a la generación de un resumen. Invoca a la funcion de generarResumen() y a testGenResumen().
 
 *  _generarresumen(numCliente, mesIN)_ : Crea un stored procedure que toma como parámetros el número que tiene asociado el cliente y el número de mes asociado al período que se quiera generar en el resumen. Inserta en la tabla cabecera el número de resumen, luego nombre, apellido, domicilio y número de tarjeta del cliente, se ingresan los cierres correspondiente a la terminación del numero de tarjeta y el mes pasado por parámetro. Y por último, el monto final que tiene que pagar el cliente en dicho período. Por otra parte, se inserta en la tabla detalle las compras (junto a sus fechas, montos y comercios) realizadas entre las fechas de 'desde' y 'hasta' de la tabla cabecera.
+
+func generarResumen() {
+	_, err = db.Query(`
+	CREATE OR REPLACE FUNCTION generarresumen(numCliente int, mesIN int, anioIN int) RETURNS void AS $$
+
+	DECLARE
+		clienteDEC record;
+		tarjetaDEC record;
+		contResumen int;
+		nomComercioDEC record;
+		compraDEC record;
+		contLinea int;
+		montofinal decimal(8,2);
+		cierreTarjetaDEC record;
+		
+		
+	BEGIN
+			contLinea := 1;
+			montofinal := 0;
+	
+			SELECT * INTO clienteDEC FROM cliente WHERE nrocliente = numCLiente;
+			
+			FOR tarjetaDEC IN SELECT * FROM tarjeta WHERE nrocliente = numCLiente LOOP
+			
+				SELECT * INTO cierreTarjetaDEC FROM cierre WHERE mes = mesIN and año = anioIN and terminacion = substring(tarjetaDEC.nrotarjeta,16)::int;
+				
+				contResumen := 0;
+				contResumen := contResumen + count(*) from cabecera;
+					
+				INSERT INTO cabecera VALUES (contResumen + 1, 
+											clienteDEC.nombre,
+											clienteDEC.apellido,
+											clienteDEC.domicilio,
+											tarjetaDEC.nrotarjeta,
+											cierreTarjetaDEC.fechainicio, 
+											cierreTarjetaDEC.fechacierre, 
+											cierreTarjetaDEC.fechavto,
+											montofinal
+											);														
+				
+										
+				FOR compraDEC IN SELECT * FROM compra WHERE nrotarjeta = tarjetaDEC.nrotarjeta AND pagado = false AND fecha::date >=  cierreTarjetaDEC.fechainicio AND fecha::date <= cierreTarjetaDEC.fechacierre
+				LOOP	 
+					SELECT * INTO nomComercioDEC FROM comercio WHERE nrocomercio = compraDEC.nrocomercio;
+					INSERT INTO detalle VALUES (contResumen + 1, 
+												contLinea,
+												compraDEC.fecha,			
+												nomComercioDEC.nombre, 
+												compraDEC.monto
+												);	
+					contLinea := contLinea + 1;	
+					montofinal := montofinal + compraDEC.monto;	
+					UPDATE compra SET pagado = true WHERE nrooperacion = compraDEC.nrooperacion;						
+				END LOOP;	
+				
+				UPDATE cabecera SET total = montofinal WHERE nrotarjeta = tarjetaDEC.nrotarjeta	AND desde =	cierreTarjetaDEC.fechainicio AND hasta = cierreTarjetaDEC.fechacierre;										
+			
+			END LOOP;				
+			
+	END
+$$ LANGUAGE PLPGSQL;`)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+----
 
 - Descripción de los métodos del archivo _triggers.go_ :
 * _trgCargarAlerta()_ : Crea el _trigger cargaralerta_trg_ que luego de cada _insert_ en la tabla _rechazo_, ejecuta el _stored procedure cargar_alerta()_. Esto es para que se agreguen todas las alertas de rechazo, con el código de alerta correspondiente.
