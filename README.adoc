@@ -100,7 +100,6 @@ El programa está organizado en una carpeta y un archivo escrito en Go (main.go)
 * _ProbarConsumo()_ : Invoca a las funciones _autorizacionCompra(), crearTriggers(), generarConsumos() y testFunciones()_.
 * _ProbarResumen()_ :  Invoca a las funciones _generarResumen() y testGenResumen()_.
 
-
 - Descripción de las funciones del archivo _tablas.go_ :
 * _crearTablas()_ : Creación de todas las tablas.
 * _borrarTablas()_ : Borra todas las tablas.
@@ -371,8 +370,6 @@ func triggerstiempo() {
 	trgTiempoCompras()
 }
 ----
-
-* _ProbarResumen()_ : Contiene la logica asociada a la generación de un resumen. Invoca a la funcion de generarResumen() y a testGenResumen().
 
 *  _generarresumen(numCliente, mesIN)_ : Crea un stored procedure que toma como parámetros el número que tiene asociado el cliente y el número de mes asociado al período que se quiera generar en el resumen. Inserta en la tabla cabecera el número de resumen, luego nombre, apellido, domicilio y número de tarjeta del cliente, se ingresan los cierres correspondiente a la terminación del numero de tarjeta y el mes pasado por parámetro. Y por último, el monto final que tiene que pagar el cliente en dicho período. Por otra parte, se inserta en la tabla detalle las compras (junto a sus fechas, montos y comercios) realizadas entre las fechas de 'desde' y 'hasta' de la tabla cabecera.
 
