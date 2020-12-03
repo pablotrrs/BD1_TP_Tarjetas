@@ -121,6 +121,12 @@ _storedProcedures.go_ :
 
 * _autorizacionCompra()_ : Contiene la lógica asociada a la autorización de una compra. Invoca a los _stored procedures cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje), chequear_cantidad_rechazos(numtarjeta), y autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)_.
 
+_autorizacionCompra()_
+[source, python]
+----
+include::sql/storedProcedure.py[]
+----
+
 * _cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje)_ : Crea un _stored procedure_ que toma como parámetros el número de una tarjeta, el número de un comercio, el monto de la compra y un mensaje. Inserta en la tabla _rechazo_ los valores antes mencionados.
 
 * _chequear_cantidad_rechazos(numtarjeta)_ : Crea un _stored procedure_ que toma como parámetro el número de un rechazo. Detecta si la tarjeta registra dos rechazos por exceso de límite en el mismo día. En tal caso, cambia el estado de la tarjeta a suspendida e inserta una nueva alerta con _codalerta_ 32 y el mensaje _'suspencion preventiva'_.
