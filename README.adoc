@@ -124,7 +124,7 @@ _storedProcedures.go_ :
 _autorizacionCompra()_
 [source, go]
 ----
-include::sql/storedProcedure.go[]
+include::.sql/storedProcedure.go[]
 ----
 
 * _cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje)_ : Crea un _stored procedure_ que toma como parámetros el número de una tarjeta, el número de un comercio, el monto de la compra y un mensaje. Inserta en la tabla _rechazo_ los valores antes mencionados.
