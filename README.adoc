@@ -89,6 +89,41 @@ El programa está organizado en una carpeta y un archivo escrito en Go (main.go)
 ----
 func BDnoSQL() {
 
+	type Cliente struct {
+	Nrocliente int
+	Nombre     string
+	Apellido   string
+	Domicilio  string
+	Telefono   string
+}
+
+type Tarjeta struct {
+	Nrotarjeta   string
+	Nrocliente   int
+	Validadesde  string
+	Validahasta  string
+	Codseguridad string
+	Limitecompra int
+	Estado       string
+}
+
+type Comercio struct {
+	Nrocomercio  int
+	Nombre       string
+	Domicilio    string
+	Codigopostal string
+	Telefono     string
+}
+
+type Compra struct {
+	Nrooperacion int
+	Nrotarjeta   string
+	Nrocomercio  int
+	Fecha        string
+	Monto        int
+	Pagado       bool
+}
+
 	db, err := bolt.Open("testBolt.db", 0600, nil)
 	if err != nil {
 		log.Fatal(err)
