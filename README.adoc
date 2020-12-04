@@ -81,9 +81,9 @@ El programa está organizado en una carpeta y un archivo escrito en Go (main.go)
 
 - Descripción de los métodos del archivo _main.go_ :
 
-* _mostrarMenu()_ : Imprime el menu con todas las opciones disponibles a ejecutar.
-* _manejarOpciones(opcion int)_ : Se encarga de ejecutar la función que corresponda a la opción que se ingresa e imprime el resultado por pantalla. 
-* _BDnoSQL()_ : Se conecta y crea la base de datos no SQL e ingresa los datos de los tipos _cliente_, _tarjeta_, _comercio_ y _compra_. Respetando el órden y tipo de datos de sus atributos. Carga tres filas de cada tipo.
+* `mostrarMenu()` : Imprime el menu con todas las opciones disponibles a ejecutar.
+* `manejarOpciones(opcion int)` : Se encarga de ejecutar la función que corresponda a la opción que se ingresa e imprime el resultado por pantalla. 
+* `BDnoSQL()` : Se conecta y crea la base de datos no SQL e ingresa los datos de los tipos _cliente_, _tarjeta_, _comercio_ y _compra_. Respetando el órden y tipo de datos de sus atributos. Carga tres filas de cada tipo.
 
 [source, go]
 ----
@@ -244,7 +244,7 @@ type Compra struct {
 }
 ----
 
-* _CreateUpdate(db, bucketName, key, value)_ : Abre una transacción de escritura, crea el bucket si no existe con el nombre indicado. Escribe los datos key, value especificados en el bucket y luego cierra la transacción.   
+* `CreateUpdate(db, bucketName, key, value)` : Abre una transacción de escritura, crea el bucket si no existe con el nombre indicado. Escribe los datos key, value especificados en el bucket y luego cierra la transacción.   
 
 [source, go]
 ----
@@ -271,7 +271,7 @@ func CreateUpdate(db *bolt.DB, bucketName string, key []byte, value []byte) erro
 }
 ----
 
-* _ReadUnique(db, bucketName, key)_ : Abre una transacción de lectura con el nombre del bucket pasado como parámetro, y obtiene los datos asociados a la clave especificada.
+* `ReadUnique(db, bucketName, key)` : Abre una transacción de lectura con el nombre del bucket pasado como parámetro, y obtiene los datos asociados a la clave especificada.
 
 [source, go]
 ----
@@ -290,35 +290,35 @@ func ReadUnique(db *bolt.DB, bucketName string, key []byte) ([]byte, error) {
 ----
 
 - Descripción de las funciones del archivo _sql.go_ :
-*  _DbConnection()_ : Conexión a la base de datos. 
-* _CrearDB()_ : Creación la base de datos tarjeta. Invoca a la función _crearDB()_.
-* _BorrarBD()_ : Borra la base de datos tarjeta. Invoca a la función _BorrarDB()_.
-* _CrearTablas()_ : Crea las tablas invocando a la función _crearTablas()_.
-* _BorrarTablas()_ : Borra las tablas invocando a la función _borrarTablas()_.
-* _CrearPKsyFKs()_ : Invoca a las funciones _crearPKs()_ y _crearFKs()_ para la creación de las PK's y las FK's.
-* _BorrarPKsyFKs()_ : Invoca a las funciones _borrarFKs()_ y _borrarPKs()_ para eliminar las FK's y las PK's.
-* _CargarDatos()_ : Invoca a la función _cargarDatos()_ y a la función _InsertarCierres()_.
-* _BorrarDatos()_ : Invoca a la función _borrarDatos()_.
-* _ProbarConsumo()_ : Invoca a las funciones _autorizacionCompra(), crearTriggers(), generarConsumos() y testFunciones()_.
-* _ProbarResumen()_ :  Invoca a las funciones _generarResumen() y testGenResumen()_.
+* `DbConnection()` : Conexión a la base de datos. 
+* `CrearDB()` : Creación la base de datos tarjeta. Invoca a la función _crearDB()`.
+* `BorrarBD()` : Borra la base de datos tarjeta. Invoca a la función _BorrarDB()`.
+* `CrearTablas()` : Crea las tablas invocando a la función _crearTablas()`.
+* `BorrarTablas()` : Borra las tablas invocando a la función _borrarTablas()`.
+* `CrearPKsyFKs()` : Invoca a las funciones _crearPKs()` y _crearFKs()` para la creación de las PK's y las FK's.
+* `BorrarPKsyFKs()` : Invoca a las funciones _borrarFKs()` y _borrarPKs()` para eliminar las FK's y las PK's.
+* `CargarDatos()` : Invoca a la función _cargarDatos()` y a la función _InsertarCierres()`.
+* `BorrarDatos()` : Invoca a la función _borrarDatos()`.
+* `ProbarConsumo()` : Invoca a las funciones _autorizacionCompra(), crearTriggers(), generarConsumos() y testFunciones()`.
+* `ProbarResumen()` :  Invoca a las funciones _generarResumen() y testGenResumen()`.
 
 - Descripción de las funciones del archivo _tablas.go_ :
-* _crearTablas()_ : Creación de todas las tablas.
-* _borrarTablas()_ : Borra todas las tablas.
-* _crearPKs()_ : Creación de las PK's de cada tabla. 
-* _crearFKs()_ : Creación de las FK's de cada tabla.
-* _eliminarPKs()_ : Elimina las PK's de cada tabla.
-* _eliminarFKs()_ : Elimina las FK's de cada tabla.
+* `crearTablas()` : Creación de todas las tablas.
+* `borrarTablas()` : Borra todas las tablas.
+* `crearPKs()` : Creación de las PK's de cada tabla. 
+* `crearFKs()` : Creación de las FK's de cada tabla.
+* `eliminarPKs()` : Elimina las PK's de cada tabla.
+* `eliminarFKs()` : Elimina las FK's de cada tabla.
 
 - Descripción de las funciones del archivo _datos.go_ :
-* _cargarDatos()_ : Carga la cantidad de datos requerida en las tablas: _cliente_ , _comercio_ y _tarjeta_. Genera los cierres para el año 2020, invocando a _InsertarCierres()_.
-* _borrarDatos()_ : Borra todos los datos almacenados en las diferentes tablas.
-* _InsertarCierres()_ : Ejecuta la función _insertarCierres()_ que crea la _stored procedure insertCierres()_ que genera todos los cierres del año 2020. Luego, realiza una consulta a esa _Stored Procedure_. 
+* `cargarDatos()` : Carga la cantidad de datos requerida en las tablas: _cliente_ , _comercio_ y _tarjeta_. Genera los cierres para el año 2020, invocando a _InsertarCierres()`.
+* `borrarDatos()` : Borra todos los datos almacenados en las diferentes tablas.
+* `InsertarCierres()` : Ejecuta la función _insertarCierres()` que crea la _stored procedure insertCierres()` que genera todos los cierres del año 2020. Luego, realiza una consulta a esa _Stored Procedure_. 
 
 - Descripción de las funciones del archivo
 _storedProcedures.go_ :
 
-* _insertarCierres()_ : Crea el _stored procedure_ encargado de generar los cierres del año 2020. Recorre las 10 posibles terminaciones de tarjetas, los 12 meses del año y crea los cierres.
+* `insertarCierres()` : Crea el _stored procedure_ encargado de generar los cierres del año 2020. Recorre las 10 posibles terminaciones de tarjetas, los 12 meses del año y crea los cierres.
 
 [source, go]
 ----
@@ -343,13 +343,11 @@ func insertarCierres() {
 }
 ----
 
-* _autorizacionCompra()_ : Contiene la lógica asociada a la autorización de una compra. Invoca a los _stored procedures cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje), chequear_cantidad_rechazos(numtarjeta), y autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)_.
+* `autorizacionCompra()` : Contiene la lógica asociada a la autorización de una compra. Invoca a los _stored procedures cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje), y autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)`.
 
-* _autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)_ : Crea un _stored procedure_ que toma como parámetros el número de una tarjeta, su código de seguridad, el número de un comercio, y el monto de la compra. Devuelve _true_ si la compra fue autorizada y _false_ si fue rechazada.
+* `autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)` : Crea un _stored procedure_ que toma como parámetros el número de una tarjeta, su código de seguridad, el número de un comercio, y el monto de la compra. Devuelve _true_ si la compra fue autorizada y _false_ si fue rechazada.
 
-* _cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje)_ : Crea un _stored procedure_ que toma como parámetros el número de una tarjeta, el número de un comercio, el monto de la compra y un mensaje. Inserta en la tabla _rechazo_ los valores antes mencionados.
-
-* _chequear_cantidad_rechazos(numtarjeta)_ : Crea un _stored procedure_ que toma como parámetro el número de un rechazo. Detecta si la tarjeta registra dos rechazos por exceso de límite en el mismo día. En tal caso, cambia el estado de la tarjeta a suspendida e inserta una nueva alerta con _codalerta_ 32 y el mensaje _'suspencion preventiva'_.
+* `cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje)` : Crea un _stored procedure_ que toma como parámetros el número de una tarjeta, el número de un comercio, el monto de la compra y un mensaje. Inserta en la tabla _rechazo_ los valores antes mencionados.
 
 [source, go]
 ----
@@ -497,18 +495,27 @@ func autorizacionCompra() {
 }
 ----
 
-* _crearTriggers()_ : Invoca a las funciones _cargar_alerta()_ y _triggerstiempo()_.
+* `crearTriggers()` : Invoca a las funciones _cargar_alerta()` y _triggerstiempo()`.
 
-* _cargar_alerta()_ : Crea el _stored procedure cargar_alerta()_ que agrega una alerta con los valores insertados en la tabla rechazo. Con el codalerta correspondiente.
+* `cargar_alerta()` : Crea el _stored procedure cargar_alerta()` que agrega una alerta con los valores insertados en la tabla rechazo. Con el codalerta correspondiente.
 
 [source, go]
 ----
 func cargar_alerta() {
 	_, err = db.Query(`
 		CREATE OR REPLACE FUNCTION cargar_alerta() RETURNS trigger AS $$
+		DECLARE
+			cantidad_rechazos int;		
 		BEGIN
 
 			INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, new.fecha, new.nrorechazo, 0, new.motivo);
+			
+			SELECT COUNT(new.nrotarjeta) INTO cantidad_rechazos FROM rechazo WHERE nrotarjeta = new.nrotarjeta AND motivo ='supera limite de tarjeta' AND DATE_PART('day', fecha) = DATE_PART('day', CURRENT_TIMESTAMP);
+				
+			IF cantidad_rechazos > 1 THEN
+				UPDATE tarjeta SET estado = 'suspendida' where nrotarjeta = new.nrotarjeta;   
+				INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, CURRENT_TIMESTAMP, null, 32, 'suspencion preventiva'); 	
+			END IF;			
 			
 		return new;			
 		END
@@ -522,7 +529,7 @@ func cargar_alerta() {
 }
 ----
 
-* _triggerstiempos()_ :  Crea el _stored procedure compras_tiempo()_. Esta función chequea que la diferencia de tiempo entre las compras de una misma tarjeta. En caso de detectar dos compras en comercios con el mismo código postal y con tiempo menor a un minuto, se inserta una alerta con codalerta 1 y el mensaje _'Compra en menos de 1 minuto en una misma zona'_. En caso de detectar dos compras con lapso menor a 5 minutos con diferentes códigos postales se inserta una nueva alerta con codalerta 5 y el mensaje _'Compra en menos de 5 minutos en diferentes zonas'_.
+* `triggerstiempos()` :  Crea el _stored procedure compras_tiempo()`. Esta función chequea que la diferencia de tiempo entre las compras de una misma tarjeta. En caso de detectar dos compras en comercios con el mismo código postal y con tiempo menor a un minuto, se inserta una alerta con codalerta 1 y el mensaje _'Compra en menos de 1 minuto en una misma zona'_. En caso de detectar dos compras con lapso menor a 5 minutos con diferentes códigos postales se inserta una nueva alerta con codalerta 5 y el mensaje _'Compra en menos de 5 minutos en diferentes zonas'_.
 
 [source, go]
 ----
@@ -573,7 +580,7 @@ func triggerstiempo() {
 }
 ----
 
-*  _generarresumen(numCliente, mesIN)_ : Crea un stored procedure que toma como parámetros el número que tiene asociado el cliente y el número de mes asociado al período que se quiera generar en el resumen. Inserta en la tabla cabecera el número de resumen, luego nombre, apellido, domicilio y número de tarjeta del cliente, se ingresan los cierres correspondiente a la terminación del numero de tarjeta y el mes pasado por parámetro. Y por último, el monto final que tiene que pagar el cliente en dicho período. Por otra parte, se inserta en la tabla detalle las compras (junto a sus fechas, montos y comercios) realizadas entre las fechas de 'desde' y 'hasta' de la tabla cabecera.
+*  `generarresumen(numCliente, mesIN)` : Crea un stored procedure que toma como parámetros el número que tiene asociado el cliente y el número de mes asociado al período que se quiera generar en el resumen. Inserta en la tabla cabecera el número de resumen, luego nombre, apellido, domicilio y número de tarjeta del cliente, se ingresan los cierres correspondiente a la terminación del numero de tarjeta y el mes pasado por parámetro. Y por último, el monto final que tiene que pagar el cliente en dicho período. Por otra parte, se inserta en la tabla detalle las compras (junto a sus fechas, montos y comercios) realizadas entre las fechas de 'desde' y 'hasta' de la tabla cabecera.
 
 [source, go]
 ----
@@ -646,7 +653,7 @@ $$ LANGUAGE PLPGSQL;`)
 ----
 
 - Descripción de los métodos del archivo _triggers.go_ :
-* _trgCargarAlerta()_ : Crea el _trigger cargaralerta_trg_ que luego de cada _insert_ en la tabla _rechazo_, ejecuta el _stored procedure cargar_alerta()_. Esto es para que se agreguen todas las alertas de rechazo, con el código de alerta correspondiente.
+* `trgCargarAlerta()` : Crea el _trigger cargaralerta_trg_ que luego de cada _insert_ en la tabla _rechazo_, ejecuta el _stored procedure cargar_alerta()`. Esto es para que se agreguen todas las alertas de rechazo, con el código de alerta correspondiente.
 
 [source, go]
 ----
@@ -664,7 +671,7 @@ func trgCargarAlerta() {
 }
 ----
 
-* _trgTiempoCompras()_ : Crea el _trigger tiempo_compras_trg_ que antes de cada _insert_ en la tabla _compra_, ejecuta el _stored procedure compras_tiempo()_ para comprobar si se ha generado una alerta de código 1 o 5. 
+* `trgTiempoCompras()` : Crea el _trigger tiempo_compras_trg_ que antes de cada _insert_ en la tabla _compra_, ejecuta el _stored procedure compras_tiempo()` para comprobar si se ha generado una alerta de código 1 o 5. 
 
 [source, go]
 ----
@@ -684,29 +691,32 @@ func trgTiempoCompras() {
 
 - Descripción de los métodos del archivo _testConsumo.go_ :
 
-* _generarConsumos()_ : Inserta los datos de los distintos consumos en la tabla _consumo_.
+* `generarConsumos()` : Inserta los datos de los distintos consumos en la tabla _consumo_.
 
-* _testFunciones()_ : Invoca alas funciones _consumir(), testCompra(), testAutorizaciones(), testAlertas() y testAll()_.
+* `testFunciones()` : Invoca alas funciones _consumir(), testCompra(), testAutorizaciones(), testAlertas() y testAll()`.
 
-* _consumir()_ : Genera los consumos virtuales tomando los datos de la tabla _consumo_.
+* `consumir()` : Genera los consumos virtuales tomando los datos de la tabla _consumo_.
 
-* _testAll()_ : Crea el _stored procedure test_all()_ que retorna true si todos los tests fueron ejecutados exitosamente.
+* `testAll()` : Crea el _stored procedure test_all()` que retorna true si todos los tests fueron ejecutados exitosamente.
 
-* _testCompra()_ : Crea el _stored procedure test_compras()_ que retorna true si las compras generadas por los consumos virtuales fueron exitosas.
+* `testCompra()` : Crea el _stored procedure test_compras()` que retorna true si las compras generadas por los consumos virtuales fueron exitosas.
 
-* _testAutorizaciones()_ : Crea el _stored procedure test_autorizaciones()_ que retorna true si los rechazos correspondientes a los consumos virtuales se generaron de la manera esperada.
+* `testAutorizaciones()` : Crea el _stored procedure test_autorizaciones()` que retorna true si los rechazos correspondientes a los consumos virtuales se generaron de la manera esperada.
 
-* _testAlertas()_ : Crea el _stored procedure test_alertas()_ que retorna true si las alertas correspondientes a los consumos virtuales fueron generadas como se esperaba.
+* `testAlertas()` : Crea el _stored procedure test_alertas()` que retorna true si las alertas correspondientes a los consumos virtuales fueron generadas como se esperaba.
 
 - Descripción de los métodos del archivo _testResumen.go_ :
 
-* _testGenResumen()_ : Invoca al _stored procedure generarresumen()_ pasandole como parámetros el número del cliente y el período que se espera en el resumen. Genera los resumenes a partir de lo que se encuentre en la tabla compras.
+* `testGenResumen()` : Invoca al _stored procedure generarresumen()` pasandole como parámetros el número del cliente y el período que se espera en el resumen. Genera los resumenes a partir de lo que se encuentre en la tabla compras.
 
-* _testResultCabecera()_ : Crea el _stored procedure testCabecera()_ que retorna true si el completado de la tabla cabecera era como se esperaba.  
+* `testResultCabecera()` : Crea el _stored procedure testCabecera()` que retorna true si el completado de la tabla cabecera era como se esperaba.  
 
-* _testResultDetalle()_ : Crea el _stored procedure testDetalle()_ que retorna true si el completado de la tabla detalle era como se esperaba dependiendo de las fechas y si el cliente pago o no el producto.
+* `testResultDetalle()` : Crea el _stored procedure testDetalle()` que retorna true si el completado de la tabla detalle era como se esperaba dependiendo de las fechas y si el cliente pago o no el producto.
 
 == Conclusiones
 
 Durante la resolución del trabajo se nos fueron presentando diferentes dificultades a la hora de generar las soluciones en código. Estas fueron solucionadas consultando repetidas veces a la documentacion oficial de postgresql.
-Como conclusión final, podemos decir que a pesar de los problemas surgidos durante el desarrollo del trabajo práctico pudimos, con esfuerzo y dedicación, lograr cumplir con todos los puntos planteados. Se pueden observar algunas diferencias entre las bases de datos SQL y noSQL. En primer lugar, SQL permite combinar de forma eficiente diferentes tablas para extraer información relacionada, mientras que NoSQL no lo permite o muy limitadamente. En segundo lugar, NoSQL permite distribuir grandes cantidades de información, mientras que SQL facilita distribuir bases de datos relacionales. Por último, SQL permite gestionar los datos junto con las relaciones existentes entre ellos, en NoSQL no existe este tipo de utilidades.
+
+Como conclusión final, podemos decir que a pesar de los problemas surgidos durante el desarrollo del trabajo práctico pudimos, con esfuerzo y dedicación, lograr cumplir con todos los puntos planteados. 
+
+Se pueden observar algunas diferencias entre las bases de datos SQL y noSQL. En primer lugar, SQL permite combinar de forma eficiente diferentes tablas para extraer información relacionada, mientras que NoSQL no lo permite o muy limitadamente. En segundo lugar, NoSQL permite distribuir grandes cantidades de información, mientras que SQL facilita distribuir bases de datos relacionales. Por último, SQL permite gestionar los datos junto con las relaciones existentes entre ellos, en NoSQL no existe este tipo de utilidades.
