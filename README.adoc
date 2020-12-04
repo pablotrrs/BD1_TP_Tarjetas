@@ -291,16 +291,16 @@ func ReadUnique(db *bolt.DB, bucketName string, key []byte) ([]byte, error) {
 
 - Descripción de las funciones del archivo _sql.go_ :
 * `DbConnection()` : Conexión a la base de datos. 
-* `CrearDB()` : Creación la base de datos tarjeta. Invoca a la función _crearDB()`.
-* `BorrarBD()` : Borra la base de datos tarjeta. Invoca a la función _BorrarDB()`.
-* `CrearTablas()` : Crea las tablas invocando a la función _crearTablas()`.
-* `BorrarTablas()` : Borra las tablas invocando a la función _borrarTablas()`.
-* `CrearPKsyFKs()` : Invoca a las funciones _crearPKs()` y _crearFKs()` para la creación de las PK's y las FK's.
-* `BorrarPKsyFKs()` : Invoca a las funciones _borrarFKs()` y _borrarPKs()` para eliminar las FK's y las PK's.
-* `CargarDatos()` : Invoca a la función _cargarDatos()` y a la función _InsertarCierres()`.
-* `BorrarDatos()` : Invoca a la función _borrarDatos()`.
-* `ProbarConsumo()` : Invoca a las funciones _autorizacionCompra(), crearTriggers(), generarConsumos() y testFunciones()`.
-* `ProbarResumen()` :  Invoca a las funciones _generarResumen() y testGenResumen()`.
+* `CrearDB()` : Creación la base de datos tarjeta. Invoca a la función `crearDB()`.
+* `BorrarBD()` : Borra la base de datos tarjeta. Invoca a la función `BorrarDB()`.
+* `CrearTablas()` : Crea las tablas invocando a la función `crearTablas()`.
+* `BorrarTablas()` : Borra las tablas invocando a la función `borrarTablas()`.
+* `CrearPKsyFKs()` : Invoca a las funciones `crearPKs()` y `crearFKs()` para la creación de las PK's y las FK's.
+* `BorrarPKsyFKs()` : Invoca a las funciones `borrarFKs()` y _borrarPKs()` para eliminar las FK's y las PK's.
+* `CargarDatos()` : Invoca a la función `cargarDatos()` y a la función `InsertarCierres()`.
+* `BorrarDatos()` : Invoca a la función `borrarDatos()`.
+* `ProbarConsumo()` : Invoca a las funciones `autorizacionCompra()`, `crearTriggers()`, `generarConsumos()` y `testFunciones()`.
+* `ProbarResumen()` :  Invoca a las funciones `generarResumen()` y `testGenResumen()`.
 
 - Descripción de las funciones del archivo _tablas.go_ :
 * `crearTablas()` : Creación de todas las tablas.
@@ -311,9 +311,9 @@ func ReadUnique(db *bolt.DB, bucketName string, key []byte) ([]byte, error) {
 * `eliminarFKs()` : Elimina las FK's de cada tabla.
 
 - Descripción de las funciones del archivo _datos.go_ :
-* `cargarDatos()` : Carga la cantidad de datos requerida en las tablas: _cliente_ , _comercio_ y _tarjeta_. Genera los cierres para el año 2020, invocando a _InsertarCierres()`.
+* `cargarDatos()` : Carga la cantidad de datos requerida en las tablas: _cliente_ , _comercio_ y _tarjeta_. Genera los cierres para el año 2020, invocando a `InsertarCierres()`.
 * `borrarDatos()` : Borra todos los datos almacenados en las diferentes tablas.
-* `InsertarCierres()` : Ejecuta la función _insertarCierres()` que crea la _stored procedure insertCierres()` que genera todos los cierres del año 2020. Luego, realiza una consulta a esa _Stored Procedure_. 
+* `InsertarCierres()` : Ejecuta la función `insertarCierres()` que crea la _stored procedure_ `insertCierres()` que genera todos los cierres del año 2020. Luego, realiza una consulta a esa _Stored Procedure_. 
 
 - Descripción de las funciones del archivo
 _storedProcedures.go_ :
@@ -343,7 +343,7 @@ func insertarCierres() {
 }
 ----
 
-* `autorizacionCompra()` : Contiene la lógica asociada a la autorización de una compra. Invoca a los _stored procedures cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje), y autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)`.
+* `autorizacionCompra()` : Contiene la lógica asociada a la autorización de una compra. Invoca a los _stored procedures_ `cargar_rechazo(numtarjeta, numcomercio, montocompra, mensaje)`, y `autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)`.
 
 * `autorizacion_compra(numtarjeta, codseg, numcomercio, montocompra)` : Crea un _stored procedure_ que toma como parámetros el número de una tarjeta, su código de seguridad, el número de un comercio, y el monto de la compra. Devuelve _true_ si la compra fue autorizada y _false_ si fue rechazada.
 
@@ -495,9 +495,9 @@ func autorizacionCompra() {
 }
 ----
 
-* `crearTriggers()` : Invoca a las funciones _cargar_alerta()` y _triggerstiempo()`.
+* `crearTriggers()` : Invoca a las funciones `cargar_alerta()` y `triggerstiempo()`.
 
-* `cargar_alerta()` : Crea el _stored procedure cargar_alerta()` que agrega una alerta con los valores insertados en la tabla rechazo. Con el codalerta correspondiente.
+* `cargar_alerta()` : Crea el _stored procedure_ `cargar_alerta()` que agrega una alerta con los valores insertados en la tabla rechazo. Con el codalerta correspondiente.
 
 [source, go]
 ----
@@ -529,7 +529,7 @@ func cargar_alerta() {
 }
 ----
 
-* `triggerstiempos()` :  Crea el _stored procedure compras_tiempo()`. Esta función chequea que la diferencia de tiempo entre las compras de una misma tarjeta. En caso de detectar dos compras en comercios con el mismo código postal y con tiempo menor a un minuto, se inserta una alerta con codalerta 1 y el mensaje _'Compra en menos de 1 minuto en una misma zona'_. En caso de detectar dos compras con lapso menor a 5 minutos con diferentes códigos postales se inserta una nueva alerta con codalerta 5 y el mensaje _'Compra en menos de 5 minutos en diferentes zonas'_.
+* `triggerstiempos()` :  Crea el _stored procedure_ `compras_tiempo()`. Esta función chequea que la diferencia de tiempo entre las compras de una misma tarjeta. En caso de detectar dos compras en comercios con el mismo código postal y con tiempo menor a un minuto, se inserta una alerta con codalerta 1 y el mensaje _'Compra en menos de 1 minuto en una misma zona'_. En caso de detectar dos compras con lapso menor a 5 minutos con diferentes códigos postales se inserta una nueva alerta con codalerta 5 y el mensaje _'Compra en menos de 5 minutos en diferentes zonas'_.
 
 [source, go]
 ----
@@ -653,7 +653,7 @@ $$ LANGUAGE PLPGSQL;`)
 ----
 
 - Descripción de los métodos del archivo _triggers.go_ :
-* `trgCargarAlerta()` : Crea el _trigger cargaralerta_trg_ que luego de cada _insert_ en la tabla _rechazo_, ejecuta el _stored procedure cargar_alerta()`. Esto es para que se agreguen todas las alertas de rechazo, con el código de alerta correspondiente.
+* `trgCargarAlerta()` : Crea el _trigger cargaralerta_trg_ que luego de cada _insert_ en la tabla _rechazo_, ejecuta el _stored procedure_ `cargar_alerta()`. Esto es para que se agreguen todas las alertas de rechazo, con el código de alerta correspondiente.
 
 [source, go]
 ----
@@ -671,7 +671,7 @@ func trgCargarAlerta() {
 }
 ----
 
-* `trgTiempoCompras()` : Crea el _trigger tiempo_compras_trg_ que antes de cada _insert_ en la tabla _compra_, ejecuta el _stored procedure compras_tiempo()` para comprobar si se ha generado una alerta de código 1 o 5. 
+* `trgTiempoCompras()` : Crea el _trigger tiempo_compras_trg_ que antes de cada _insert_ en la tabla _compra_, ejecuta el _stored procedure_ `compras_tiempo()` para comprobar si se ha generado una alerta de código 1 o 5. 
 
 [source, go]
 ----
@@ -693,25 +693,25 @@ func trgTiempoCompras() {
 
 * `generarConsumos()` : Inserta los datos de los distintos consumos en la tabla _consumo_.
 
-* `testFunciones()` : Invoca alas funciones _consumir(), testCompra(), testAutorizaciones(), testAlertas() y testAll()`.
+* `testFunciones()` : Invoca a las funciones `consumir()`, `testCompra()`, `testAutorizaciones()`, `testAlertas()` y `testAll()`.
 
 * `consumir()` : Genera los consumos virtuales tomando los datos de la tabla _consumo_.
 
-* `testAll()` : Crea el _stored procedure test_all()` que retorna true si todos los tests fueron ejecutados exitosamente.
+* `testAll()` : Crea el _stored procedure_ `test_all()` que retorna true si todos los tests fueron ejecutados exitosamente.
 
-* `testCompra()` : Crea el _stored procedure test_compras()` que retorna true si las compras generadas por los consumos virtuales fueron exitosas.
+* `testCompra()` : Crea el _stored procedure_ `test_compras()` que retorna true si las compras generadas por los consumos virtuales fueron exitosas.
 
-* `testAutorizaciones()` : Crea el _stored procedure test_autorizaciones()` que retorna true si los rechazos correspondientes a los consumos virtuales se generaron de la manera esperada.
+* `testAutorizaciones()` : Crea el _stored procedure_ `test_autorizaciones()` que retorna true si los rechazos correspondientes a los consumos virtuales se generaron de la manera esperada.
 
-* `testAlertas()` : Crea el _stored procedure test_alertas()` que retorna true si las alertas correspondientes a los consumos virtuales fueron generadas como se esperaba.
+* `testAlertas()` : Crea el _stored procedure_ `test_alertas()` que retorna true si las alertas correspondientes a los consumos virtuales fueron generadas como se esperaba.
 
 - Descripción de los métodos del archivo _testResumen.go_ :
 
-* `testGenResumen()` : Invoca al _stored procedure generarresumen()` pasandole como parámetros el número del cliente y el período que se espera en el resumen. Genera los resumenes a partir de lo que se encuentre en la tabla compras.
+* `testGenResumen()` : Invoca al _stored procedure_ `generarresumen()` pasandole como parámetros el número del cliente y el período que se espera en el resumen. Genera los resumenes a partir de lo que se encuentre en la tabla compras.
 
-* `testResultCabecera()` : Crea el _stored procedure testCabecera()` que retorna true si el completado de la tabla cabecera era como se esperaba.  
+* `testResultCabecera()` : Crea el _stored procedure_ `testCabecera()` que retorna true si el completado de la tabla cabecera era como se esperaba.  
 
-* `testResultDetalle()` : Crea el _stored procedure testDetalle()` que retorna true si el completado de la tabla detalle era como se esperaba dependiendo de las fechas y si el cliente pago o no el producto.
+* `testResultDetalle()` : Crea el _stored procedure_ `testDetalle()` que retorna true si el completado de la tabla detalle era como se esperaba dependiendo de las fechas y si el cliente pago o no el producto.
 
 == Conclusiones
 
