@@ -38,27 +38,6 @@ func autorizacionCompra() {
 	}
 
 	_, err = db.Query(`
-		CREATE OR REPLACE FUNCTION chequear_cantidad_rechazos(numtarjeta char(16)) RETURNS void AS $$
-		DECLARE
-			cantidad_rechazos int;
-		
-		BEGIN
-			SELECT COUNT(numtarjeta) INTO cantidad_rechazos FROM rechazo WHERE nrotarjeta = numtarjeta AND motivo ='supera limite de tarjeta' AND DATE_PART('day', fecha) = DATE_PART('day', CURRENT_TIMESTAMP);
-				
-			IF cantidad_rechazos > 1 THEN
-				UPDATE tarjeta SET estado = 'suspendida' where nrotarjeta = numtarjeta;   
-				INSERT INTO alerta VALUES(nextval('seq_nroalerta'), numtarjeta, CURRENT_TIMESTAMP, null, 32, 'suspencion preventiva'); 
-			
-			END IF;
-			
-		END
-		$$ LANGUAGE PLPGSQL;`)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = db.Query(`
 	CREATE OR REPLACE FUNCTION autorizacion_compra(numtarjeta char(16), codseg char(4), numcomercio int, montocompra decimal(7,2)) RETURNS boolean AS $$
 	DECLARE
 		tarj record;
@@ -144,7 +123,6 @@ func autorizacionCompra() {
 		
 		IF tarj.limitecompra < monto_total THEN
 			PERFORM cargar_rechazo(CAST(numtarjeta AS char(16)), CAST(numcomercio AS int), CAST(montocompra AS decimal(7,2)), 'supera limite de tarjeta');
-			PERFORM chequear_cantidad_rechazos(CAST(numtarjeta AS char(16)));
 			return false;
 		END IF;
 
@@ -175,9 +153,18 @@ func crearTriggers() {
 func cargar_alerta() {
 	_, err = db.Query(`
 		CREATE OR REPLACE FUNCTION cargar_alerta() RETURNS trigger AS $$
+		DECLARE
+			cantidad_rechazos int;		
 		BEGIN
 
 			INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, new.fecha, new.nrorechazo, 0, new.motivo);
+			
+			SELECT COUNT(new.nrotarjeta) INTO cantidad_rechazos FROM rechazo WHERE nrotarjeta = new.nrotarjeta AND motivo ='supera limite de tarjeta' AND DATE_PART('day', fecha) = DATE_PART('day', CURRENT_TIMESTAMP);
+				
+			IF cantidad_rechazos > 1 THEN
+				UPDATE tarjeta SET estado = 'suspendida' where nrotarjeta = new.nrotarjeta;   
+				INSERT INTO alerta VALUES(nextval('seq_nroalerta'), new.nrotarjeta, CURRENT_TIMESTAMP, null, 32, 'suspencion preventiva'); 	
+			END IF;			
 			
 		return new;			
 		END
